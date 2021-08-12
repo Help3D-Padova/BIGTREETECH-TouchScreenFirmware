@@ -16,10 +16,10 @@ void menuMain(void)
       #else
         {ICON_EXTRUDE,                 LABEL_EXTRUDE},
       #endif
-      {ICON_STOP,                    LABEL_EMERGENCYSTOP},
       {ICON_GCODE,                   LABEL_TERMINAL},
-      {ICON_CUSTOM,                  LABEL_CUSTOM},
+      {ICON_LEVELING,                LABEL_BED_LEVELING},
       {ICON_SETTINGS,                LABEL_SETTINGS},
+      {ICON_STOP,                    LABEL_EMERGENCYSTOP},
       {ICON_BACK,                    LABEL_BACK},
     }
   };
@@ -61,30 +61,23 @@ void menuMain(void)
         break;
 
       case KEY_ICON_3:
-        // Emergency Stop : Used for emergency stopping, a reset is required to return to operational mode.
-        // it may need to wait for a space to open up in the command queue.
-        // Enable EMERGENCY_PARSER in Marlin Firmware for an instantaneous M112 command.
-        Serial_Puts(SERIAL_PORT, "M112\n");
+       infoMenu.menu[++infoMenu.cur] = menuTerminal;
         break;
+        
 
       case KEY_ICON_4:
-        infoMenu.menu[++infoMenu.cur] = menuTerminal;
-        break;
+      infoMenu.menu[++infoMenu.cur] = menuBedLeveling;
+        break; 
 
       case KEY_ICON_5:
-        if (infoSettings.rrf_macros_enable)
-        {
-          strcpy(infoFile.title, "Macros");
-          infoMenu.menu[++infoMenu.cur] = menuCallMacro;
-        }
-        else
-        {
-          infoMenu.menu[++infoMenu.cur] = menuCustom;
-        }
+        infoMenu.menu[++infoMenu.cur] = menuSettings;
         break;
 
       case KEY_ICON_6:
-        infoMenu.menu[++infoMenu.cur] = menuSettings;
+      // Emergency Stop : Used for emergency stopping, a reset is required to return to operational mode.
+        // it may need to wait for a space to open up in the command queue.
+        // Enable EMERGENCY_PARSER in Marlin Firmware for an instantaneous M112 command.
+        Serial_Puts(SERIAL_PORT, "M112\n");
         break;
 
       case KEY_ICON_7:

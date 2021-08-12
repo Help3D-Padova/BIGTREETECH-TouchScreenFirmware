@@ -15,6 +15,7 @@ void infoSetFirmwareName(uint8_t *name, uint8_t name_len);
 void infoSetMachineType(uint8_t *machine, uint8_t type_len);
 void infoSetAccessPoint(uint8_t *ssid, uint8_t ssid_len);
 void infoSetIPAddress(uint8_t *ip, uint8_t ip_len);
+void menuEepromSettings(void);
 
 #ifdef __cplusplus
 }

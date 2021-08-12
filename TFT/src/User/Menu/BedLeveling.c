@@ -5,15 +5,15 @@ static inline void blUpdateState(MENUITEMS *menu)
 {
   if (getParameter(P_ABL_STATE, 0) == ENABLED)
   {
-    menu->items[3].icon = ICON_LEVELING_ON;
-    menu->items[3].label.index = LABEL_BL_ENABLE;
+    menu->items[6].icon = ICON_LEVELING_ON;
+    menu->items[6].label.index = LABEL_BL_ENABLE;
   }
   else
   {
-    menu->items[3].icon = ICON_LEVELING_OFF;
-    menu->items[3].label.index = LABEL_BL_DISABLE;
+    menu->items[6].icon = ICON_LEVELING_OFF;
+    menu->items[6].label.index = LABEL_BL_DISABLE;
   }
-  menuDrawItem(&menu->items[3], 3);
+  menuDrawItem(&menu->items[6], 6);
 }
 
 #if DELTA_PROBE_TYPE == 2  // if Delta printer with removable probe
@@ -40,10 +40,14 @@ void menuBedLeveling(void)
       {ICON_LEVELING,                LABEL_ABL},
       {ICON_MESH_EDITOR,             LABEL_MESH_EDITOR},
       {ICON_MESH_VALID,              LABEL_MESH_VALID},
-      {ICON_LEVELING_OFF,            LABEL_BL_DISABLE},
+      #if DELTA_PROBE_TYPE == 0  // if not Delta printer
+        {ICON_MANUAL_LEVEL,            LABEL_LEVELING},
+      #else
+        {ICON_CALIBRATION,             LABEL_CALIBRATION},
+      #endif
       {ICON_Z_FADE,                  LABEL_ABL_Z},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
-      {ICON_HEAT_FAN,                LABEL_UNIFIEDHEAT},
+      {ICON_LEVELING_OFF,            LABEL_BL_DISABLE},
       {ICON_BACK,                    LABEL_BACK},
     }
   };
@@ -74,8 +78,8 @@ void menuBedLeveling(void)
 
   if (getParameter(P_ABL_STATE, 0) == ENABLED)
   {
-    bedLevelingItems.items[3].icon = ICON_LEVELING_ON;
-    bedLevelingItems.items[3].label.index = LABEL_BL_ENABLE;
+    bedLevelingItems.items[6].icon = ICON_LEVELING_ON;
+    bedLevelingItems.items[6].label.index = LABEL_BL_ENABLE;
   }
 
   if (infoMachineSettings.zProbe == ENABLED)
@@ -109,11 +113,18 @@ void menuBedLeveling(void)
         break;
 
       case KEY_ICON_3:
-        if (getParameter(P_ABL_STATE, 0) == ENABLED)
-          storeCmd(infoMachineSettings.firmwareType != FW_REPRAPFW ? "M420 S0\n" : "G29 S2\n");
-        else
-          storeCmd(infoMachineSettings.firmwareType != FW_REPRAPFW ? "M420 S1\n" : "G29 S1\n");
+      #if DELTA_PROBE_TYPE == 0  // if not Delta printer
+          infoMenu.menu[++infoMenu.cur] = menuManualLeveling;
+        #else
+          #if DELTA_PROBE_TYPE != 2  // if not removable probe
+            deltaCalibration();
+          #else  // if removable probe
+            setDialogText(LABEL_WARNING, LABEL_CONNECT_PROBE, LABEL_CONTINUE, LABEL_CANCEL);
+            showDialog(DIALOG_TYPE_ALERT, deltaCalibration, NULL, NULL);
+          #endif
+        #endif
         break;
+        
 
       case KEY_ICON_4:
       {
@@ -141,7 +152,10 @@ void menuBedLeveling(void)
         break;
 
       case KEY_ICON_6:
-        infoMenu.menu[++infoMenu.cur] = menuUnifiedHeat;
+        if (getParameter(P_ABL_STATE, 0) == ENABLED)
+          storeCmd(infoMachineSettings.firmwareType != FW_REPRAPFW ? "M420 S0\n" : "G29 S2\n");
+        else
+          storeCmd(infoMachineSettings.firmwareType != FW_REPRAPFW ? "M420 S1\n" : "G29 S1\n");
         break;
 
       case KEY_ICON_7:

@@ -8,116 +8,76 @@ typedef enum
   MKEY_IDLE = IDLE_TOUCH,
 } MKEY_VALUES;
 
-const GUI_RECT rect_of_mode[MODE_COUNT] = {
-  // 2 select icon
-  {1 * SPACE_SELEX + 0 * ICON_WIDTH, SPACE_SELEY, 1 * SPACE_SELEX + 1 * ICON_WIDTH, SPACE_SELEY + ICON_HEIGHT},
-  {3 * SPACE_SELEX + 1 * ICON_WIDTH, SPACE_SELEY, 3 * SPACE_SELEX + 2 * ICON_WIDTH, SPACE_SELEY + ICON_HEIGHT},
-};
-
-const uint8_t icon_mode [MODE_COUNT] = {
-  ICON_MARLIN,
-  ICON_BIGTREETECH,
-};
-
-void drawModeIcon(void)
-{
-  for (uint8_t i = 0; i < MODE_COUNT; i++)
-  {
-    ICON_ReadDisplay(rect_of_mode[i].x0, rect_of_mode[i].y0, icon_mode[i]);
-  }
-
-  const GUI_RECT mode_title_rect[MODE_COUNT] = {
-    {0,           rect_of_mode[0].y1 + BYTE_HEIGHT / 2, text_startx, rect_of_mode[0].y1 + BYTE_HEIGHT / 2 + BYTE_HEIGHT},
-    {text_startx, rect_of_mode[0].y1 + BYTE_HEIGHT / 2, LCD_WIDTH,   rect_of_mode[0].y1 + BYTE_HEIGHT / 2 + BYTE_HEIGHT},
-  };
-
-  GUI_RestoreColorDefault();
-  GUI_DispStringInPrect(&mode_title_rect[0],(uint8_t *)"Marlin Mode");
-  GUI_DispStringInPrect(&mode_title_rect[1],(uint8_t *)"Touch Mode");
-}
-
-static inline MKEY_VALUES MKeyGetValue(void)
-{
-  return (MKEY_VALUES)KEY_GetValue(COUNT(rect_of_mode), rect_of_mode);
-}
-
-void drawSelectedMode(int8_t nowMode)
-{
-  const uint8_t border_off = 4;
-
-  for (uint8_t i = 0; i < MODE_COUNT; i++)
-  {
-    GUI_SetColor(i == nowMode ? infoSettings.marlin_mode_font_color : BACKGROUND_COLOR);
-    GUI_DrawRect(rect_of_mode[i].x0 - border_off, rect_of_mode[i].y0 - border_off,
-                 rect_of_mode[i].x1 + border_off, rect_of_mode[i].y1 + border_off);
-  }
-
-  GUI_RestoreColorDefault();
-}
 
 // open mode switching menu
 void menuMode(void)
 {
-  int8_t nowMode = infoSettings.mode;
-  TSC_ReDrawIcon = NULL;  // disable icon redraw callback function
+  // 1 title, ITEM_PER_PAGE items(icon+label)
+  MENUITEMS mainPageItems = {
+    // title
+    LABEL_MAINMENU,
+    // icon                         label
+    {{ICON_LEVELING,                LABEL_BED_LEVELING},
+     {ICON_EXTRUDE,                 LABEL_EXTRUDE},
+     {ICON_EEPROM_SAVE,             LABEL_EEPROM_SETTINGS},
+     {ICON_OCTOPRINT,               LABEL_OCTOPRINT},
+     {ICON_DISABLE_STEPPERS,        LABEL_DISABLE_STEPPERS},
+     {ICON_CONNECTION_SETTINGS,     LABEL_CONNECTION_SETTINGS},
+     {ICON_BACKGROUND,              LABEL_BACKGROUND},
+     {ICON_BACK,                    LABEL_BACK},}
+  };
 
-  GUI_Clear(infoSettings.bg_color);
-  drawModeIcon();
-  drawSelectedMode(nowMode);
+  KEY_VALUES key_num = KEY_IDLE;
 
-  #if LCD_ENCODER_SUPPORT
-    while (!XPT2046_Read_Pen() || LCD_Enc_ReadBtn(LCD_ENC_BUTTON_INTERVAL))
-      ;  // wait for button release
-  #else
-    while (!XPT2046_Read_Pen())
-      ;  // wait for touch release
-  #endif
+  if (infoSettings.status_screen != 1)
+  {
+    mainPageItems.items[7].icon = ICON_PRINT;
+    mainPageItems.items[7].label.index = LABEL_PRINT;
+  }
 
-  #if LCD_ENCODER_SUPPORT
-    encoderPosition = 0;
-  #endif
+  menuDrawPage(&mainPageItems);
 
   while (infoMenu.menu[infoMenu.cur] == menuMode)
   {
-    MKEY_VALUES key_num = MKeyGetValue();
-
-    if (key_num == MKEY_0 || key_num == MKEY_1)
+    key_num = menuKeyGetValue();
+    switch (key_num)
     {
-      nowMode = key_num;
-      break;
-    }
-
-    #if LCD_ENCODER_SUPPORT
-      if (encoderPosition)
-      {
-        nowMode = NOBEYOND(0, nowMode + encoderPosition, MODE_COUNT - 1);
-        drawSelectedMode(nowMode);
-        encoderPosition = 0;
-      }
-
-      if (LCD_Enc_ReadBtn(LCD_ENC_BUTTON_INTERVAL))
+      case KEY_ICON_0:
+        infoMenu.menu[++infoMenu.cur] = menuBedLeveling;
         break;
 
-      LCD_Enc_CheckSteps();
-    #endif
+      case KEY_ICON_1:
+        infoMenu.menu[++infoMenu.cur] = menuExtrude;
+        break;
 
-    if (infoSettings.mode == MODE_SERIAL_TSC || infoSettings.serial_alwaysOn == 1)
-    {
-      loopBackEnd();
+      case KEY_ICON_2:
+        infoMenu.menu[++infoMenu.cur] = menuEepromSettings;
+        break;  
+
+      case KEY_ICON_3:
+        infoMenu.menu[++infoMenu.cur] = menuOctoprint;
+        break;    
+
+      case KEY_ICON_4:
+        storeCmd("M84\n");
+        break;  
+
+      case KEY_ICON_5:
+        infoMenu.menu[++infoMenu.cur] = menuConnectionSettings;
+        break;
+
+      case KEY_ICON_7:
+        if (infoSettings.status_screen != 1)
+          infoMenu.menu[++infoMenu.cur] = menuPrint;
+        else
+          infoMenu.cur--;
+        break;  
+
+      default:
+        break;
     }
-    #ifdef LCD_LED_PWM_CHANNEL  // LCD_CheckDimming() is invoked by loopBackEnd(), so we guarantee it is invoked only once
-      else
-      {
-        LCD_CheckDimming();
-      }
-    #endif
-  }
 
-  if (infoSettings.mode != nowMode)
-  {
-    infoSettings.mode = nowMode;
-    storePara();
+    loopProcess();
   }
-
-  Mode_Switch();
 }
+

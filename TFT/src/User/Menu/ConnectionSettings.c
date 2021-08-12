@@ -9,7 +9,7 @@ const MENUITEMS connectionSettingsItems = {
     {ICON_BAUD_RATE,               LABEL_BAUDRATE},
     {ICON_DISCONNECT,              LABEL_DISCONNECT},
     {ICON_STOP,                    LABEL_EMERGENCYSTOP},
-    {ICON_SHUT_DOWN,               LABEL_SHUT_DOWN},
+    {ICON_BACKGROUND,              LABEL_BACKGROUND},
     {ICON_BACKGROUND,              LABEL_BACKGROUND},
     {ICON_BACKGROUND,              LABEL_BACKGROUND},
     {ICON_BACKGROUND,              LABEL_BACKGROUND},
@@ -123,10 +123,6 @@ void menuConnectionSettings(void)
         // it may need to wait for a space to open up in the command queue.
         // Enable EMERGENCY_PARSER in Marlin Firmware for an instantaneous M112 command.
         Serial_Puts(SERIAL_PORT, "M112\n");
-        break;
-
-      case KEY_ICON_3:
-        storeCmd("M81\n");
         break;
 
       case KEY_ICON_7:

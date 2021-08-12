@@ -126,7 +126,7 @@ float menuMeshTuner(uint16_t col, uint16_t row, float value)
 
       // change unit
       case KEY_ICON_4:
-        curUnit_index = (curUnit_index + 1) % ITEM_FINE_MOVE_LEN_NUM;
+        curUnit_index = (curUnit_index + 1) % ITEM_FINE_MOVE_LEN_BABY;
 
         meshItems.items[key_num] = itemMoveLen[curUnit_index];
 

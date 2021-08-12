@@ -239,6 +239,8 @@
 
     // Menus
     #define STRING_HEAT                   "Heat"
+    #define STRING_OCTOPRINT              "Octoprint"
+    #define STRING_DISABLE_NOTY           "Enable notification"
     #define STRING_MOVE                   "Move"
     #define STRING_HOME                   "Home"
     #define STRING_PRINT                  "Print"

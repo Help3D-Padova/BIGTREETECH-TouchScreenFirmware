@@ -17,14 +17,10 @@ void menuUnifiedMove(void)
     {
       {ICON_HOME,                    LABEL_HOME},
       {ICON_MOVE,                    LABEL_MOVE},
-      {ICON_EXTRUDE,                 LABEL_EXTRUDE},
       {ICON_DISABLE_STEPPERS,        LABEL_DISABLE_STEPPERS},
       {ICON_BABYSTEP,                LABEL_BABYSTEP},
-      #if DELTA_PROBE_TYPE == 0  // if not Delta printer
-        {ICON_MANUAL_LEVEL,            LABEL_LEVELING},
-      #else
-        {ICON_CALIBRATION,             LABEL_CALIBRATION},
-      #endif
+      {ICON_BACKGROUND,              LABEL_BACKGROUND},
+      {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACK,                    LABEL_BACK},
     }
@@ -32,11 +28,6 @@ void menuUnifiedMove(void)
 
   KEY_VALUES key_num = KEY_IDLE;
 
-  if (infoMachineSettings.leveling != BL_DISABLED)
-  {
-    UnifiedMoveItems.items[6].icon = ICON_LEVELING;
-    UnifiedMoveItems.items[6].label.index = LABEL_BED_LEVELING;
-  }
 
   menuDrawPage(&UnifiedMoveItems);
 
@@ -54,33 +45,11 @@ void menuUnifiedMove(void)
         break;
 
       case KEY_ICON_2:
-        infoMenu.menu[++infoMenu.cur] = menuExtrude;
+         storeCmd("M84\n");
         break;
 
       case KEY_ICON_3:
-        storeCmd("M84\n");
-        break;
-
-      case KEY_ICON_4:
-        infoMenu.menu[++infoMenu.cur] = menuBabystep;
-        break;
-
-      case KEY_ICON_5:
-        #if DELTA_PROBE_TYPE == 0  // if not Delta printer
-          infoMenu.menu[++infoMenu.cur] = menuManualLeveling;
-        #else
-          #if DELTA_PROBE_TYPE != 2  // if not removable probe
-            deltaCalibration();
-          #else  // if removable probe
-            setDialogText(LABEL_WARNING, LABEL_CONNECT_PROBE, LABEL_CONTINUE, LABEL_CANCEL);
-            showDialog(DIALOG_TYPE_ALERT, deltaCalibration, NULL, NULL);
-          #endif
-        #endif
-        break;
-
-      case KEY_ICON_6:
-        if (infoMachineSettings.leveling != BL_DISABLED)
-          infoMenu.menu[++infoMenu.cur] = menuBedLeveling;
+       infoMenu.menu[++infoMenu.cur] = menuBabystep;
         break;
 
       case KEY_ICON_7:

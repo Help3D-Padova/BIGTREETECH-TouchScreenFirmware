@@ -266,6 +266,8 @@ extern "C" {
 #define LANG_KEY_POINT_4                      "label_point_4:"
 #define LANG_KEY_POINT_5                      "label_point_5:"
 #define LANG_KEY_BED_LEVELING                 "label_bed_leveling:"
+#define LANG_KEY_OCTOPRINT                    "label_octoprint:"
+#define LANG_KEY_DISABLE_NOTY                 "label_disable_noty:"
 #define LANG_KEY_BL_COMPLETE                  "label_bl_complete:"
 #define LANG_KEY_BL_SMART_FILL                "label_bl_smart_fill:"
 #define LANG_KEY_BL_ENABLE                    "label_bl_enable:"

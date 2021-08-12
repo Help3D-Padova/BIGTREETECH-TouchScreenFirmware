@@ -155,7 +155,7 @@ void menuBabystep(void)
 
       // change unit
       case KEY_ICON_5:
-        moveLenSteps_index = (moveLenSteps_index + 1) % ITEM_FINE_MOVE_LEN_NUM;
+        moveLenSteps_index = (moveLenSteps_index + 1) % ITEM_FINE_MOVE_LEN_BABY;
 
         babyStepItems.items[key_num] = itemMoveLen[moveLenSteps_index];
 

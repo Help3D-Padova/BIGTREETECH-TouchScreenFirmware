@@ -1,6 +1,6 @@
 #ifndef _CONFIGURATION_H_
 #define _CONFIGURATION_H_
-#define CONFIG_VERSION 20210730
+#define CONFIG_VERSION 20210811
 
 //====================================================================================================
 //=============================== Settings Configurable On config.ini ================================
@@ -33,7 +33,7 @@
  *
  *   Options: [2400: 0, 9600: 1, 19200: 2, 38400: 3, 57600: 4, 115200: 5, 250000: 6, 500000: 7, 1000000: 8]
  */
-#define BAUDRATE 5  // Default: 5
+#define BAUDRATE 6  // Default: 5
 
 /**
  * Default Touch Mode Colors
@@ -351,7 +351,7 @@
  *
  *   Options: [Normal Disabled: 0, Normal Enabled: 1, Smart Disabled: 2, Smart Enabled: 3]
  */
-#define FIL_SENSOR_TYPE 0  // Default: 0
+#define FIL_SENSOR_TYPE 1  // Default: 0
 
 /**
  * Inverted Filament Runout Logic
@@ -359,11 +359,11 @@
  *
  *   Options: [disable: 0, enable: 1]
  */
-#define FIL_RUNOUT_INVERTING 1  // Default: 1
+#define FIL_RUNOUT_INVERTING 0  // Default: 1
 
 // Filament Noise Threshold
 // Pause print when filament runout is detected at least for this time period.
-#define FIL_NOISE_THRESHOLD 100   // Default: 100 (ms)
+#define FIL_NOISE_THRESHOLD 200   // Default: 100 (ms)
 
 // Smart Filament Runout Detection
 // For use with an encoder disc that toggles runout pin as filament moves.
@@ -606,7 +606,7 @@
  * FILAMENT_LOAD_UNLOAD_GCODES option on Marlin configuration_adv.h need to be uncommented.
  * Adds a submenu to the movement menu for selecting load and unload actions.
  */
-#define LOAD_UNLOAD_M701_M702
+//#define LOAD_UNLOAD_M701_M702
 
 /**
  * Delta Probe Type

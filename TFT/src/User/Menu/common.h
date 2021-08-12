@@ -13,6 +13,7 @@ extern "C" {
 #define ITEM_PERCENT_STEPS_NUM  3
 #define ITEM_MOVE_LEN_NUM       5
 #define ITEM_FINE_MOVE_LEN_NUM  3
+#define ITEM_FINE_MOVE_LEN_BABY  2
 #define ITEM_EXT_LEN_NUM        5
 #define ITEM_TOGGLE_NUM         2
 

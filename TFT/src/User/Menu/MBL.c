@@ -210,7 +210,7 @@ void menuMBL(void)
 
       // change unit
       case KEY_ICON_4:
-        curUnit_index = (curUnit_index + 1) % ITEM_FINE_MOVE_LEN_NUM;
+        curUnit_index = (curUnit_index + 1) % ITEM_FINE_MOVE_LEN_BABY;
 
         mblItems.items[key_num] = itemMoveLen[curUnit_index];
 
@@ -254,9 +254,15 @@ void menuMBL(void)
 
       case KEY_ICON_7:
         if (mblRunning)
-          mblAbort();
+        {
+          setDialogText((u8 *)"Vuoi davvero uscire ?", (u8 *)"Se interrompi ora il bed leveling dovrai ricominciare da zero", LABEL_CONFIRM, LABEL_CANCEL);
+          showDialog(DIALOG_TYPE_ALERT, mblAbort, NULL, NULL);
+         }
+          else
+          {
+            infoMenu.cur--;
+          }
 
-        infoMenu.cur--;
         break;
 
       default:
