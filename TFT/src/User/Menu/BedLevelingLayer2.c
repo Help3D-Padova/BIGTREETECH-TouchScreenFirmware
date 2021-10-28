@@ -42,6 +42,30 @@ void menuBedLevelingLayer2(void)
       break;
   }
 
+  #if DELTA_PROBE_TYPE != 2  // if not removable probe
+    if (infoMachineSettings.zProbe == ENABLED)
+    {
+      bedLevelingLayer2Items.items[3].icon = ICON_LEVEL_CORNER;
+      bedLevelingLayer2Items.items[3].label.index = LABEL_LEVEL_CORNER;
+
+      if (infoSettings.touchmi_sensor != 0)
+      {
+        bedLevelingLayer2Items.items[4].icon = ICON_NOZZLE;
+        bedLevelingLayer2Items.items[4].label.index = LABEL_TOUCHMI;
+      }
+      else
+      {
+        bedLevelingLayer2Items.items[4].icon = ICON_BLTOUCH;
+        bedLevelingLayer2Items.items[4].label.index = LABEL_BLTOUCH;
+      }
+
+      if (infoSettings.z_steppers_alignment != 0)
+      {
+        bedLevelingLayer2Items.items[5].icon = ICON_Z_ALIGN;
+        bedLevelingLayer2Items.items[5].label.index = LABEL_Z_ALIGN;
+      }
+    }
+  #endif
 
   menuDrawPage(&bedLevelingLayer2Items);
 
@@ -76,6 +100,12 @@ void menuBedLevelingLayer2(void)
           menuUBLLoad();
         break;
 
+      case KEY_ICON_3:
+        #if DELTA_PROBE_TYPE != 2  // if not removable probe
+          if (infoMachineSettings.zProbe == ENABLED)
+            OPEN_MENU(menuLevelCorner);
+        #endif
+        break;
 
       case KEY_ICON_4:
         #if DELTA_PROBE_TYPE != 2  // if not removable probe
