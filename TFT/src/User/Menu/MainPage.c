@@ -26,7 +26,7 @@ void menuMain(void)
 
   KEY_VALUES key_num = KEY_IDLE;
 
-  if (infoSettings.rrf_macros_enable)
+  if (infoMachineSettings.firmwareType == FW_REPRAPFW)
   {
     mainPageItems.items[5].label.index = LABEL_MACROS;
   }
@@ -39,24 +39,24 @@ void menuMain(void)
 
   menuDrawPage(&mainPageItems);
 
-  while (infoMenu.menu[infoMenu.cur] == menuMain)
+  while (MENU_IS(menuMain))
   {
     key_num = menuKeyGetValue();
     switch (key_num)
     {
       case KEY_ICON_0:
-        infoMenu.menu[++infoMenu.cur] = menuUnifiedHeat;
+        OPEN_MENU(menuUnifiedHeat);
         break;
 
       case KEY_ICON_1:
-        infoMenu.menu[++infoMenu.cur] = menuUnifiedMove;
+        OPEN_MENU(menuUnifiedMove);
         break;
 
       case KEY_ICON_2:
         #ifdef LOAD_UNLOAD_M701_M702
-          infoMenu.menu[++infoMenu.cur] = menuLoadUnload;
+          OPEN_MENU(menuLoadUnload);
         #else
-          infoMenu.menu[++infoMenu.cur] = menuExtrude;
+          OPEN_MENU(menuExtrude);
         #endif
         break;
 
@@ -66,6 +66,7 @@ void menuMain(void)
         
 
       case KEY_ICON_4:
+<<<<<<< HEAD
       infoMenu.menu[++infoMenu.cur] = menuBedLeveling;
         break; 
 
@@ -78,13 +79,32 @@ void menuMain(void)
         // it may need to wait for a space to open up in the command queue.
         // Enable EMERGENCY_PARSER in Marlin Firmware for an instantaneous M112 command.
         Serial_Puts(SERIAL_PORT, "M112\n");
+=======
+        OPEN_MENU(menuTerminal);
+        break;
+
+      case KEY_ICON_5:
+        if (infoMachineSettings.firmwareType == FW_REPRAPFW)
+        {
+          strcpy(infoFile.title, "Macros");
+          OPEN_MENU(menuCallMacro);
+        }
+        else
+        {
+          OPEN_MENU(menuCustom);
+        }
+        break;
+
+      case KEY_ICON_6:
+        OPEN_MENU(menuSettings);
+>>>>>>> master
         break;
 
       case KEY_ICON_7:
         if (infoSettings.status_screen != 1)
-          infoMenu.menu[++infoMenu.cur] = menuPrint;
+          OPEN_MENU(menuPrint);
         else
-          infoMenu.cur--;
+          CLOSE_MENU();
         break;
 
       default:

@@ -8,10 +8,60 @@ typedef enum
   MKEY_IDLE = IDLE_TOUCH,
 } MKEY_VALUES;
 
+<<<<<<< HEAD
+=======
+const GUI_RECT rect_of_mode[MODE_COUNT] = {
+  // 2 select icon
+  {1 * SPACE_SELEX + 0 * ICON_WIDTH, SPACE_SELEY, 1 * SPACE_SELEX + 1 * ICON_WIDTH, SPACE_SELEY + ICON_HEIGHT},
+  {3 * SPACE_SELEX + 1 * ICON_WIDTH, SPACE_SELEY, 3 * SPACE_SELEX + 2 * ICON_WIDTH, SPACE_SELEY + ICON_HEIGHT},
+};
+
+const uint8_t icon_mode [MODE_COUNT] = {
+  ICON_MARLIN,
+  ICON_BIGTREETECH,
+};
+
+void drawModeIcon(void)
+{
+  for (uint8_t i = 0; i < MODE_COUNT; i++)
+  {
+    ICON_ReadDisplay(rect_of_mode[i].x0, rect_of_mode[i].y0, icon_mode[i]);
+  }
+
+  const GUI_RECT mode_title_rect[MODE_COUNT] = {
+    {0,           rect_of_mode[0].y1 + BYTE_HEIGHT / 2, text_startx, rect_of_mode[0].y1 + BYTE_HEIGHT / 2 + BYTE_HEIGHT},
+    {text_startx, rect_of_mode[0].y1 + BYTE_HEIGHT / 2, LCD_WIDTH,   rect_of_mode[0].y1 + BYTE_HEIGHT / 2 + BYTE_HEIGHT},
+  };
+
+  GUI_RestoreColorDefault();
+  GUI_DispStringInPrect(&mode_title_rect[0],(uint8_t *)"Marlin Mode");
+  GUI_DispStringInPrect(&mode_title_rect[1],(uint8_t *)"Touch Mode");
+}
+
+static inline MKEY_VALUES MKeyGetValue(void)
+{
+  return (MKEY_VALUES)KEY_GetValue(COUNT(rect_of_mode), rect_of_mode);
+}
+
+void drawSelectedMode(int8_t nowMode)
+{
+  const uint8_t border_off = 4;
+
+  for (uint8_t i = 0; i < MODE_COUNT; i++)
+  {
+    GUI_SetColor(i == nowMode ? infoSettings.marlin_font_color : MENU_BACKGROUND_COLOR);
+    GUI_DrawRect(rect_of_mode[i].x0 - border_off, rect_of_mode[i].y0 - border_off,
+                 rect_of_mode[i].x1 + border_off, rect_of_mode[i].y1 + border_off);
+  }
+
+  GUI_RestoreColorDefault();
+}
+>>>>>>> master
 
 // open mode switching menu
 void menuMode(void)
 {
+<<<<<<< HEAD
   // 1 title, ITEM_PER_PAGE items(icon+label)
   MENUITEMS mainPageItems = {
     // title
@@ -26,6 +76,10 @@ void menuMode(void)
      {ICON_BACKGROUND,              LABEL_BACKGROUND},
      {ICON_BACK,                    LABEL_BACK},}
   };
+=======
+  int8_t nowMode = GET_BIT(infoSettings.mode, 0);
+  TSC_ReDrawIcon = NULL;  // disable icon redraw callback function
+>>>>>>> master
 
   KEY_VALUES key_num = KEY_IDLE;
 
@@ -35,9 +89,13 @@ void menuMode(void)
     mainPageItems.items[7].label.index = LABEL_PRINT;
   }
 
+<<<<<<< HEAD
   menuDrawPage(&mainPageItems);
 
   while (infoMenu.menu[infoMenu.cur] == menuMode)
+=======
+  while (MENU_IS(menuMode))
+>>>>>>> master
   {
     key_num = menuKeyGetValue();
     switch (key_num)
@@ -73,8 +131,14 @@ void menuMode(void)
           infoMenu.cur--;
         break;  
 
+<<<<<<< HEAD
       default:
         break;
+=======
+    if (infoSettings.mode == MODE_SERIAL_TSC || infoSettings.serial_always_on == 1)
+    {
+      loopBackEnd();
+>>>>>>> master
     }
 
     loopProcess();

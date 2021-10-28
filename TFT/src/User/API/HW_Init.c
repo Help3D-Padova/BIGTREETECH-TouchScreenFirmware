@@ -45,13 +45,13 @@ void HW_Init(void)
   readStoredPara();  // read settings parameter
 
   #if defined(SERIAL_DEBUG_PORT) && defined(SERIAL_DEBUG_ENABLED)
-    Serial_ReSourceInit();  // Initialize serial ports first if debugging is enabled
+    Serial_Init(ALL_PORTS);  // Initialize serial ports first if debugging is enabled
   #endif
 
-  LCD_RefreshDirection(infoSettings.rotate_ui);  // refresh display direction after reading settings
-  scanUpdates();                                 // scan icon, fonts and config files
-  checkflashSign();                              // check font/icon/config signature in SPI flash for update
-  initMachineSetting();                          // load default machine settings
+  LCD_RefreshDirection(infoSettings.rotated_ui);  // refresh display direction after reading settings
+  scanUpdates();                                  // scan icon, fonts and config files
+  checkflashSign();                               // check font/icon/config signature in SPI flash for update
+  initMachineSettings();                          // load default machine settings
 
   #ifdef LED_COLOR_PIN
     knob_LED_Init();
@@ -72,7 +72,7 @@ void HW_Init(void)
   #endif
 
   #if ENC_ACTIVE_SIGNAL
-    LCD_Enc_InitActiveSignal();
+    LCD_Enc_InitActiveSignal(infoSettings.marlin_type == LCD12864);
   #endif
 
   #ifdef PS_ON_PIN
@@ -92,7 +92,7 @@ void HW_Init(void)
     TSC_Calibration();
     storePara();
   }
-  else if (readIsRestored())
+  else if (readIsNotStored())
   {
     storePara();
   }
@@ -104,18 +104,15 @@ void HW_Init(void)
 
 void HW_InitMode(uint8_t mode)
 {
-  if (infoSettings.serial_alwaysOn == ENABLED)  // disable serial comm if `serial_alwaysOn` is disabled
-    Serial_ReSourceInit();
-
   if (mode == MODE_SERIAL_TSC)
   {
-    Serial_ReSourceInit();  // enable serial comm in Touch mode
+    Serial_Init(ALL_PORTS);  // enable serial comm in Touch mode
 
     #ifdef BUZZER_PIN  // enable buzzer in Touch mode
       Buzzer_Config();
     #endif
 
-    #if LED_COLOR_PIN  // enable knob led only in Touch mode
+    #if LED_COLOR_PIN  // enable knob LED only in Touch mode
       #ifndef KEEP_KNOB_LED_COLOR_MARLIN_MODE  // set last saved color after initialization
         knob_LED_Init();
         Knob_LED_SetColor(led_colors[infoSettings.knob_led_color], infoSettings.neopixel_pixels);
@@ -123,26 +120,28 @@ void HW_InitMode(uint8_t mode)
     #endif
 
     #if ENC_ACTIVE_SIGNAL  // set encoder inactive signal if Touch mode is active
-      LCD_Enc_SetActiveSignal(0);
+      LCD_Enc_SetActiveSignal(infoSettings.marlin_type == LCD12864, 0);
     #endif
   }
   else
   {
-    if (infoSettings.serial_alwaysOn == DISABLED)  // disable serial comm if `serial_alwaysOn` is disabled
-      Serial_ReSourceDeInit();
+    if (infoSettings.serial_always_on == ENABLED)  // enable serial comm if `serial_always_on` is enabled
+      Serial_Init(ALL_PORTS);
+    else  // disable serial comm if `serial_always_on` is disabled
+      Serial_DeInit(ALL_PORTS);
 
     #ifdef BUZZER_PIN  // disable buzzer in Marlin mode
       Buzzer_DeConfig();
     #endif
 
-    #if LED_COLOR_PIN
-      #ifndef KEEP_KNOB_LED_COLOR_MARLIN_MODE  // disable knob led in Marlin mode
+    #if LED_COLOR_PIN  // disable knob LED in Marlin mode
+      #ifndef KEEP_KNOB_LED_COLOR_MARLIN_MODE
         knob_LED_DeInit();
       #endif
     #endif
 
     #if ENC_ACTIVE_SIGNAL  // set encoder active signal if Marlin mode is active
-      LCD_Enc_SetActiveSignal(1);
+      LCD_Enc_SetActiveSignal(infoSettings.marlin_type == LCD12864, 1);
     #endif
 
     #if !defined(MKS_TFT)

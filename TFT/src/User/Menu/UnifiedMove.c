@@ -31,29 +31,59 @@ void menuUnifiedMove(void)
 
   menuDrawPage(&UnifiedMoveItems);
 
-  while (infoMenu.menu[infoMenu.cur] == menuUnifiedMove)
+  while (MENU_IS(menuUnifiedMove))
   {
     key_num = menuKeyGetValue();
     switch (key_num)
     {
       case KEY_ICON_0:
-        infoMenu.menu[++infoMenu.cur] = menuHome;
+        OPEN_MENU(menuHome);
         break;
 
       case KEY_ICON_1:
-        infoMenu.menu[++infoMenu.cur] = menuMove;
+        OPEN_MENU(menuMove);
         break;
 
       case KEY_ICON_2:
+<<<<<<< HEAD
          storeCmd("M84\n");
         break;
 
       case KEY_ICON_3:
        infoMenu.menu[++infoMenu.cur] = menuBabystep;
+=======
+        OPEN_MENU(menuExtrude);
+        break;
+
+      case KEY_ICON_3:
+        storeCmd("M84\n");
+        break;
+
+      case KEY_ICON_4:
+        OPEN_MENU(menuBabystep);
+        break;
+
+      case KEY_ICON_5:
+        #if DELTA_PROBE_TYPE == 0  // if not Delta printer
+          OPEN_MENU(menuManualLeveling);
+        #else
+          #if DELTA_PROBE_TYPE != 2  // if not removable probe
+            deltaCalibration();
+          #else  // if removable probe
+            setDialogText(LABEL_WARNING, LABEL_CONNECT_PROBE, LABEL_CONTINUE, LABEL_CANCEL);
+            showDialog(DIALOG_TYPE_ALERT, deltaCalibration, NULL, NULL);
+          #endif
+        #endif
+        break;
+
+      case KEY_ICON_6:
+        if (infoMachineSettings.leveling != BL_DISABLED)
+          OPEN_MENU(menuBedLeveling);
+>>>>>>> master
         break;
 
       case KEY_ICON_7:
-        infoMenu.cur--;
+        CLOSE_MENU();
         break;
 
       default:

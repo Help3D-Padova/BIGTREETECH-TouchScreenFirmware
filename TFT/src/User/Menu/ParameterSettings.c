@@ -137,10 +137,10 @@ void loadElements(LISTITEM * parameterMainItem, uint16_t index, uint8_t itemPos)
 // Show menu for selected parameter type
 void menuShowParameter(void)
 {
-  uint16_t curIndex = KEY_IDLE;
-  PARAMETERS now = infoParameters;
   uint8_t enabledElementCount = getEnabledElementCount(curParameter);
   float oldval[enabledElementCount];
+  uint16_t curIndex = KEY_IDLE;
+  PARAMETERS now = infoParameters;
 
   for (uint8_t i = 0; i < enabledElementCount; i++)
   {
@@ -149,7 +149,7 @@ void menuShowParameter(void)
 
   listViewCreate(parameterTypes[curParameter], NULL, enabledElementCount, NULL, false, NULL, loadElements);
 
-  while (infoMenu.menu[infoMenu.cur] == menuShowParameter)
+  while (MENU_IS(menuShowParameter))
   {
     curIndex = listViewGetSelectedIndex();
 
@@ -160,7 +160,7 @@ void menuShowParameter(void)
         {
           parametersChanged = true;
         }
-        infoMenu.cur--;
+        CLOSE_MENU();
         break;
 
       default:
@@ -232,18 +232,17 @@ void loadParameters(LISTITEM * parameterMainItem, uint16_t index, uint8_t itemPo
   }
 }
 
-
 // Main parameter menu
 void menuParameterSettings(void)
 {
   uint8_t enabledParameterCount = getEnabledParameterCount();
   uint8_t totalItems = (infoMachineSettings.EEPROM == 1) ? (enabledParameterCount + P_SETTINGS_COUNT) : enabledParameterCount;
   uint16_t curIndex = KEY_IDLE;
-  LABEL title = {LABEL_PARAMETER_SETTING};
+  LABEL title = {LABEL_PARAMETER_SETTINGS};
 
   listViewCreate(title, NULL, totalItems, &psCurPage, false, NULL, loadParameters);
 
-  while (infoMenu.menu[infoMenu.cur] == menuParameterSettings)
+  while (MENU_IS(menuParameterSettings))
   {
     curIndex = listViewGetSelectedIndex();
 
@@ -259,7 +258,7 @@ void menuParameterSettings(void)
         else
         {
           psCurPage = 0;
-          infoMenu.cur--;
+          CLOSE_MENU();
         }
         break;
 
@@ -271,7 +270,7 @@ void menuParameterSettings(void)
           if (curParameter < PARAMETERS_COUNT)
           {
             mustStoreCmd("M503 S0\n");
-            infoMenu.menu[++infoMenu.cur] = menuShowParameter;
+            OPEN_MENU(menuShowParameter);
           }
           break;
         }

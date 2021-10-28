@@ -7,16 +7,43 @@ extern "C" {
 
 #include <stdint.h>
 
+// Menu Macros
+#define OPEN_MENU(x)    infoMenu.menu[++infoMenu.cur] = x
+#define REPLACE_MENU(x) infoMenu.menu[infoMenu.cur] = x
+#define CLOSE_MENU()    infoMenu.cur--
+#define MENU_IS(x)      infoMenu.menu[infoMenu.cur] == x
+#define MENU_IS_NOT(x)  infoMenu.menu[infoMenu.cur] != x
+
 // Macros to make a string from a macro
 #define STRINGIFY_(M) #M
-#define STRINGIFY(M) STRINGIFY_(M)
+#define STRINGIFY(M)  STRINGIFY_(M)
 
 #define COUNT(n) (sizeof(n)/sizeof(n[0]))
 
-#define ABS(n) ((n) > 0 ? (n) : -(n))
+#define ABS(n)    ((n) > 0 ? (n) : -(n))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) > (b) ? (b) : (a))
 #define NOBEYOND(min, v, max) MAX(min, MIN(v, max))
+
+// Bitwise macros
+
+// Get bit status at selected index
+#define GET_BIT(num, index) ((num >> index) & 1)
+
+// set bit status at selected index to 1
+#define SET_BIT_ON(num, index) num = (1 << index) | num
+
+// set bit status at selected index to 0
+#define SET_BIT_OFF(num, index) num = num & (~(1 << index))
+
+// set bit status value (0 or 1) at selected index
+#define SET_BIT_VALUE(num, index, value) num = ((value) == 1) ? (1 << index) | num : num & (~(1 << index))
+
+// Toggle bit status at selected index
+#define TOGGLE_BIT(num, index) num =  num ^ (1 << index)
+
+// Flip all bits
+#define FLIP_BITS(num) ~num
 
 #define strtod stringToDouble  // enable light weight string to double function without exponential support
 

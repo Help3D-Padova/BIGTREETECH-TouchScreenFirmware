@@ -2,15 +2,17 @@
 #include "includes.h"
 
 #ifdef TFT70_V3_0
-#define KEY_SPEEDMENU         KEY_ICON_3
-#define KEY_FLOWMENU          (KEY_SPEEDMENU + 1)
-#define KEY_MAINMENU          (KEY_FLOWMENU + 1)
-#define SET_SPEEDMENUINDEX(x) setSpeedItemIndex(x)
+  #define KEY_SPEEDMENU         KEY_ICON_3
+  #define KEY_FLOWMENU          (KEY_SPEEDMENU + 1)
+  #define KEY_MAINMENU          (KEY_FLOWMENU + 1)
+  #define SET_SPEEDMENUINDEX(x) setSpeedItemIndex(x)
 #else
-#define KEY_SPEEDMENU         KEY_ICON_3
-#define KEY_MAINMENU          (KEY_SPEEDMENU + 1)
-#define SET_SPEEDMENUINDEX(x)
+  #define KEY_SPEEDMENU         KEY_ICON_3
+  #define KEY_MAINMENU          (KEY_SPEEDMENU + 1)
+  #define SET_SPEEDMENUINDEX(x)
 #endif
+
+#define UPDATE_TOOL_TIME 2000  // 1 seconds is 1000
 
 const MENUITEMS StatusItems = {
   // title
@@ -35,8 +37,8 @@ const MENUITEMS StatusItems = {
 
 const ITEM BedItems[2] = {
   // icon                        label
-  {ICON_STATUS_BED,            LABEL_BACKGROUND},
-  {ICON_STATUS_CHAMBER,        LABEL_BACKGROUND},
+  {ICON_STATUS_BED,              LABEL_BACKGROUND},
+  {ICON_STATUS_CHAMBER,          LABEL_BACKGROUND},
 };
 
 const ITEM SpeedItems[2] = {
@@ -45,7 +47,6 @@ const ITEM SpeedItems[2] = {
   {ICON_STATUS_FLOW,             LABEL_BACKGROUND},
 };
 
-#define UPDATE_TOOL_TIME 2000  // 1 seconds is 1000
 static int8_t lastConnection_status = -1;
 static bool msgNeedRefresh = false;
 
@@ -120,7 +121,9 @@ void drawStatus(void)
     lvIcon.lines[1].text = (uint8_t *)tempstr;
     lvIcon.lines[2].text = (uint8_t *)tempstr2;
 
-    menuDrawIconOnly(&BedItems[currentBCIndex], 1);
+    if (infoSettings.chamber_en == 1)
+      menuDrawIconOnly(&BedItems[currentBCIndex], 1);
+
     showLiveInfo(1, &lvIcon, &StatusItems.items[1]);
 
     lvIcon.enabled[2] = false;
@@ -136,7 +139,9 @@ void drawStatus(void)
     sprintf(tempstr, "%3d/%-3d", heatGetCurrentTemp(BED + currentBCIndex), heatGetTargetTemp(BED + currentBCIndex));
     lvIcon.lines[1].text = (uint8_t *)tempstr;
 
-    menuDrawIconOnly(&BedItems[currentBCIndex], 1);
+    if (infoSettings.chamber_en == 1)
+      menuDrawIconOnly(&BedItems[currentBCIndex], 1);
+
     showLiveInfo(1, &lvIcon, &StatusItems.items[1]);
   #endif
 
@@ -193,6 +198,7 @@ void statusScreen_setMsg(const uint8_t *title, const uint8_t *msg)
 void statusScreen_setReady(void)
 {
   strncpy(msgtitle, (char *)textSelect(LABEL_STATUS), sizeof(msgtitle));
+
   if (infoHost.connected == false)
   {
     strncpy(msgbody, (char *)textSelect(LABEL_UNCONNECTED), sizeof(msgbody));
@@ -203,6 +209,7 @@ void statusScreen_setReady(void)
     strcat(msgbody, " ");
     strcat(msgbody, (char *)textSelect(LABEL_READY));
   }
+
   msgNeedRefresh = true;
 }
 
@@ -256,6 +263,7 @@ static inline void toggleTool(void)
         currentFan = (currentFan + 1) % MAX_FAN_COUNT;
       } while (!fanIsValid(currentFan));
     }
+
     // switch speed/flow
     currentSpeedID = (currentSpeedID + 1) % 2;
     drawStatus();
@@ -278,7 +286,7 @@ void menuStatus(void)
   drawStatus();
   drawStatusScreenMsg();
 
-  while (infoMenu.menu[infoMenu.cur] == menuStatus)
+  while (MENU_IS(menuStatus))
   {
     if (infoHost.connected != lastConnection_status)
     {
@@ -296,40 +304,40 @@ void menuStatus(void)
     {
       case KEY_ICON_0:
         heatSetCurrentIndex(currentTool);
-        infoMenu.menu[++infoMenu.cur] = menuHeat;
+        OPEN_MENU(menuHeat);
         break;
 
       case KEY_ICON_1:
         heatSetCurrentIndex(BED + currentBCIndex);
-        infoMenu.menu[++infoMenu.cur] = menuHeat;
+        OPEN_MENU(menuHeat);
         break;
 
       case KEY_ICON_2:
-        infoMenu.menu[++infoMenu.cur] = menuFan;
+        OPEN_MENU(menuFan);
         break;
 
       case KEY_SPEEDMENU:
         SET_SPEEDMENUINDEX(0);
-        infoMenu.menu[++infoMenu.cur] = menuSpeed;
+        OPEN_MENU(menuSpeed);
         break;
 
       #ifdef TFT70_V3_0
         case KEY_FLOWMENU:
           SET_SPEEDMENUINDEX(1);
-          infoMenu.menu[++infoMenu.cur] = menuSpeed;
+          OPEN_MENU(menuSpeed);
           break;
       #endif
 
       case KEY_MAINMENU:
-        infoMenu.menu[++infoMenu.cur] = menuMain;
+        OPEN_MENU(menuMain);
         break;
 
       case KEY_ICON_7:
-        infoMenu.menu[++infoMenu.cur] = menuPrint;
+        OPEN_MENU(menuPrint);
         break;
 
       case KEY_INFOBOX:
-        infoMenu.menu[++infoMenu.cur] = menuNotification;
+        OPEN_MENU(menuNotification);
       default:
         break;
     }

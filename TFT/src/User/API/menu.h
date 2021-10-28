@@ -45,6 +45,8 @@ typedef enum
   KEY_LABEL_7,
   KEY_TITLEBAR,
   KEY_INFOBOX,
+  KEY_INCREASE = IDLE_TOUCH - 5,
+  KEY_DECREASE = IDLE_TOUCH - 4,
   KEY_PAGEUP   = IDLE_TOUCH - 3,
   KEY_PAGEDOWN = IDLE_TOUCH - 2,
   KEY_BACK     = IDLE_TOUCH - 1,
@@ -84,7 +86,7 @@ typedef union
 } LABEL;
 
 // always initialize label to default values
-#define init_label(X) LABEL X = {.index = LABEL_BACKGROUND, .address = NULL}
+#define init_label(X) LABEL X = {.index = LABEL_BACKGROUND}
 
 typedef struct
 {
@@ -102,7 +104,8 @@ typedef enum
 {
   STATUS_IDLE = 0,
   STATUS_BUSY,
-  STATUS_UNCONNECT,
+  STATUS_DISCONNECTED,
+  STATUS_LISTENING,
   STATUS_NORMAL
 } SYS_STATUS;
 
@@ -169,7 +172,6 @@ extern const GUI_RECT rect_of_titleBar[1];
 void setMenuType(MENU_TYPE type);
 MENU_TYPE getMenuType(void);
 
-void reminderSetUnConnected(void);
 void reminderMessage(int16_t inf, SYS_STATUS status);
 void volumeReminderMessage(int16_t inf, SYS_STATUS status);
 void notificationDot(void);
@@ -178,10 +180,13 @@ void busyIndicator(SYS_STATUS status);
 
 MENUITEMS *getCurMenuItems(void);
 LISTITEMS *getCurListItems(void);
+GUI_POINT getIconStartPoint(int index);
 
 void GUI_RestoreColorDefault(void);
 uint8_t *labelGetAddress(const LABEL * label);
-void setMenu(MENU_TYPE menu_type, LABEL * title, uint16_t rectCount, const GUI_RECT * menuRect, void(*action_redraw)(uint8_t position, uint8_t is_press),  void (* menu_redraw)(void));
+void setMenu(MENU_TYPE menu_type, LABEL * title, uint16_t rectCount, const GUI_RECT * menuRect,
+             void(*action_redraw)(uint8_t position, uint8_t is_press),
+             void (*menu_redraw)(void));
 void menuDrawItem (const ITEM * menuItem, uint8_t position);
 void menuDrawIconOnly(const ITEM *item, uint8_t position);
 void menuDrawIconText(const ITEM *item, uint8_t position);
@@ -189,7 +194,7 @@ void menuDrawListItem(const LISTITEM *item, uint8_t position);
 void menuRefreshListPage(void);
 void menuDrawTitle(const uint8_t *content);  //(const MENUITEMS * menuItems);
 void menuReDrawCurTitle(void);
-void menuDrawPage (const MENUITEMS * menuItems);
+void menuDrawPage(const MENUITEMS * menuItems);
 void menuDrawListPage(const LISTITEMS *listItems);
 
 void showLiveInfo(uint8_t index, const LIVE_INFO * liveicon, const ITEM * item);
@@ -199,8 +204,15 @@ void displayExhibitValue(const char * valueStr);
 void itemDrawIconPress(uint8_t position, uint8_t is_press);
 void itemDrawIconPress_PS(uint8_t position, uint8_t is_press);
 KEY_VALUES menuKeyGetValue(void);
-GUI_POINT getIconStartPoint(int index);
 
+// Smart home
+#ifdef SMART_HOME
+  #define LONG_TOUCH (MODE_SWITCHING_INTERVAL / 3)  // keep it lower than MODE_SWITCHING_INTERVAL
+
+  void loopCheckBackPress(void);
+#endif
+
+void menuDummy(void);
 void loopBackEnd(void);
 void loopFrontEnd(void);
 void loopProcess(void);
