@@ -45,41 +45,11 @@ void menuUnifiedMove(void)
         break;
 
       case KEY_ICON_2:
-<<<<<<< HEAD
          storeCmd("M84\n");
         break;
 
       case KEY_ICON_3:
        infoMenu.menu[++infoMenu.cur] = menuBabystep;
-=======
-        OPEN_MENU(menuExtrude);
-        break;
-
-      case KEY_ICON_3:
-        storeCmd("M84\n");
-        break;
-
-      case KEY_ICON_4:
-        OPEN_MENU(menuBabystep);
-        break;
-
-      case KEY_ICON_5:
-        #if DELTA_PROBE_TYPE == 0  // if not Delta printer
-          OPEN_MENU(menuManualLeveling);
-        #else
-          #if DELTA_PROBE_TYPE != 2  // if not removable probe
-            deltaCalibration();
-          #else  // if removable probe
-            setDialogText(LABEL_WARNING, LABEL_CONNECT_PROBE, LABEL_CONTINUE, LABEL_CANCEL);
-            showDialog(DIALOG_TYPE_ALERT, deltaCalibration, NULL, NULL);
-          #endif
-        #endif
-        break;
-
-      case KEY_ICON_6:
-        if (infoMachineSettings.leveling != BL_DISABLED)
-          OPEN_MENU(menuBedLeveling);
->>>>>>> master
         break;
 
       case KEY_ICON_7:

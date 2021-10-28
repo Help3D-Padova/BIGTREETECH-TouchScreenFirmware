@@ -66,7 +66,6 @@ void menuMain(void)
         
 
       case KEY_ICON_4:
-<<<<<<< HEAD
       infoMenu.menu[++infoMenu.cur] = menuBedLeveling;
         break; 
 
@@ -79,25 +78,6 @@ void menuMain(void)
         // it may need to wait for a space to open up in the command queue.
         // Enable EMERGENCY_PARSER in Marlin Firmware for an instantaneous M112 command.
         Serial_Puts(SERIAL_PORT, "M112\n");
-=======
-        OPEN_MENU(menuTerminal);
-        break;
-
-      case KEY_ICON_5:
-        if (infoMachineSettings.firmwareType == FW_REPRAPFW)
-        {
-          strcpy(infoFile.title, "Macros");
-          OPEN_MENU(menuCallMacro);
-        }
-        else
-        {
-          OPEN_MENU(menuCustom);
-        }
-        break;
-
-      case KEY_ICON_6:
-        OPEN_MENU(menuSettings);
->>>>>>> master
         break;
 
       case KEY_ICON_7:

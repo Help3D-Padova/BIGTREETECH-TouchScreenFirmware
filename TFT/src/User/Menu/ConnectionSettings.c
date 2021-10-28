@@ -7,23 +7,12 @@ void updateListeningMode(MENUITEMS * menu)
 {
   if (GET_BIT(infoSettings.general_settings, LISTENING_MODE) == 1)
   {
-    menu->items[4].label.index = LABEL_OFF;
+    menu->items[3].label.index = LABEL_OFF;
     reminderMessage(LABEL_LISTENING, STATUS_LISTENING);
   }
   else
   {
-<<<<<<< HEAD
-    {ICON_BAUD_RATE,               LABEL_BAUDRATE},
-    {ICON_DISCONNECT,              LABEL_DISCONNECT},
-    {ICON_STOP,                    LABEL_EMERGENCYSTOP},
-    {ICON_BACKGROUND,              LABEL_BACKGROUND},
-    {ICON_BACKGROUND,              LABEL_BACKGROUND},
-    {ICON_BACKGROUND,              LABEL_BACKGROUND},
-    {ICON_BACKGROUND,              LABEL_BACKGROUND},
-    {ICON_BACK,                    LABEL_BACK},
-=======
-    menu->items[4].label.index = LABEL_ON;
->>>>>>> master
+    menu->items[3].label.index = LABEL_OCTOPRINT;
   }
 }
 
@@ -150,8 +139,8 @@ void menuConnectionSettings(void)
       {ICON_BAUD_RATE,               LABEL_SERIAL_PORTS},
       {ICON_DISCONNECT,              LABEL_DISCONNECT},
       {ICON_STOP,                    LABEL_EMERGENCYSTOP},
-      {ICON_SHUT_DOWN,               LABEL_SHUT_DOWN},
-      {ICON_BAUD_RATE,               LABEL_ON},
+      {ICON_OCTOPRINT,               LABEL_OCTOPRINT},
+      {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACK,                    LABEL_BACK},
@@ -183,13 +172,7 @@ void menuConnectionSettings(void)
         Serial_Puts(SERIAL_PORT, "M112\n");
         break;
 
-<<<<<<< HEAD
-=======
       case KEY_ICON_3:
-        storeCmd("M81\n");
-        break;
-
-      case KEY_ICON_4:
         TOGGLE_BIT(infoSettings.general_settings, LISTENING_MODE);
         storePara();
 
@@ -197,7 +180,6 @@ void menuConnectionSettings(void)
         menuDrawItem(&connectionSettingsItems.items[4], 4);
         break;
 
->>>>>>> master
       case KEY_ICON_7:
         CLOSE_MENU();
         break;

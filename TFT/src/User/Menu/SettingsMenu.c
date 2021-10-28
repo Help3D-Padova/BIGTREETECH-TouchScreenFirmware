@@ -88,13 +88,8 @@ void menuInfo(void)
 {
   char buf[128];
 
-<<<<<<< HEAD
   const char *const hardware = "MKS_" HARDWARE_VERSION;
   const char *const firmware = HARDWARE_VERSION"." STRINGIFY(SOFTWARE_VERSION) " " __DATE__;
-=======
-  const char *const hardware = HARDWARE_MANUFACTURER HARDWARE_VERSION;
-  const char *const firmware = SOFTWARE_MANUFACTURER STRINGIFY(SOFTWARE_VERSION) " " __DATE__;
->>>>>>> master
 
   GUI_Clear(infoSettings.bg_color);
   GUI_SetColor(GRAY);
@@ -210,13 +205,12 @@ void menuSettings(void)
         case KEY_ICON_5:
           infoMenu.menu[++infoMenu.cur] = menuEepromSettings;
           break;
-      #endif
+      #endif  
+
+      case KEY_ICON_6:
+        OPEN_MENU(menuConnectionSettings);
+        break;
       
-
-    case KEY_ICON_6:
-        infoMenu.menu[++infoMenu.cur] = menuOctoprint;
-        break;    
-
       case KEY_ICON_7:
         CLOSE_MENU();
         break;

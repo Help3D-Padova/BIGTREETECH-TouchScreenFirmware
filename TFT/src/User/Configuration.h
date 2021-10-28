@@ -1,11 +1,7 @@
 #ifndef _CONFIGURATION_H_
 #define _CONFIGURATION_H_
-<<<<<<< HEAD
-#define CONFIG_VERSION 20210811
-=======
 
 #define CONFIG_VERSION 20210914
->>>>>>> master
 
 //====================================================================================================
 //=============================== Settings Configurable On config.ini ================================
@@ -57,24 +53,7 @@
  *
  *   Options: [disable: 0, enable: 1]
  */
-<<<<<<< HEAD
-#define ENABLE_STATUS_SCREEN 1  // Default: 1
-
-/**
- * Baudrate / Connection Speed
- * This baudrate setting is used for serial connection to the printer and other serial
- * hosts like ESP8266.
- *
- * NOTE: 250000 works in most cases, but you might try a lower speed if you commonly
- *       experience drop-outs during host printing.
- *       You may try up to 1000000 to speed up SD file transfer.
- *
- *   Options: [2400: 0, 9600: 1, 19200: 2, 38400: 3, 57600: 4, 115200: 5, 250000: 6, 500000: 7, 1000000: 8]
- */
-#define BAUDRATE 6  // Default: 5
-=======
 #define STATUS_SCREEN 1  // Default: 1
->>>>>>> master
 
 /**
  * Touch Mode Colors
@@ -398,11 +377,7 @@
  *
  *   Options: [Normal Disabled: 0, Normal Enabled: 1, Smart Disabled: 2, Smart Enabled: 3]
  */
-<<<<<<< HEAD
-#define FIL_SENSOR_TYPE 1  // Default: 0
-=======
-#define FIL_RUNOUT 0  // Default: 0
->>>>>>> master
+#define FIL_RUNOUT 1  // Default: 0
 
 /**
  * Inverted Filament Runout Sensor Logic
@@ -410,9 +385,6 @@
  *
  *   Options: [disable: 0, enable: 1]
  */
-<<<<<<< HEAD
-#define FIL_RUNOUT_INVERTING 0  // Default: 1
-=======
 #define FIL_RUNOUT_INVERTED 1  // Default: 1
 
 /**
@@ -421,16 +393,11 @@
  *
  *   Options: [Normal Open: 0, Normal Close: 1]
  */
-#define FIL_RUNOUT_NC 1  // Default: 1
->>>>>>> master
+#define FIL_RUNOUT_NC 0  // Default: 1
 
 // Filament Runout Noise Threshold
 // Pause print when filament runout is detected at least for this time period.
-<<<<<<< HEAD
-#define FIL_NOISE_THRESHOLD 200   // Default: 100 (ms)
-=======
-#define FIL_RUNOUT_NOISE_THRESHOLD 100   // Default: 100 (ms)
->>>>>>> master
+#define FIL_RUNOUT_NOISE_THRESHOLD 200   // Default: 100 (ms)
 
 // Smart Filament Runout Detection
 // Used in conjuction with an SFS (Smart Filamanent Sensor) based on an encoder disc that
@@ -685,11 +652,7 @@
  * FILAMENT_LOAD_UNLOAD_GCODES option on Marlin configuration_adv.h need to be uncommented.
  * Adds a submenu to the movement menu for selecting load and unload actions.
  */
-<<<<<<< HEAD
-//#define LOAD_UNLOAD_M701_M702
-=======
-#define LOAD_UNLOAD_M701_M702  // Default: uncommented (enabled)
->>>>>>> master
+//#define LOAD_UNLOAD_M701_M702  // Default: uncommented (enabled)
 
 /**
  * Delta Probe Type

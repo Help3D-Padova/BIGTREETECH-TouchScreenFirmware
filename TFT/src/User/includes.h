@@ -108,7 +108,6 @@
 #include "BedLevelingLayer2.h"
 #include "BLTouch.h"
 #include "CaseLight.h"
-#include "Octoprint.h"
 #include "common.h"
 #include "ConnectionSettings.h"
 #include "Extrude.h"

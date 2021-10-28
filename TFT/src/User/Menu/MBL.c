@@ -260,10 +260,7 @@ void menuMBL(void)
             infoMenu.cur--;
           }
 
-<<<<<<< HEAD
-=======
         CLOSE_MENU();
->>>>>>> master
         break;
 
       default:
