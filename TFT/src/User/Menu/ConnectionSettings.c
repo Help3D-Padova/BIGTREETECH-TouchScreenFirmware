@@ -173,15 +173,7 @@ void menuConnectionSettings(void)
         break;
 
       case KEY_ICON_3:
-<<<<<<< HEAD
-        TOGGLE_BIT(infoSettings.general_settings, LISTENING_MODE);
-=======
-        storeCmd("M81\n");
-        break;
-
-      case KEY_ICON_4:
         TOGGLE_BIT(infoSettings.general_settings, INDEX_LISTENING_MODE);
->>>>>>> master
         storePara();
 
         updateListeningMode(&connectionSettingsItems);

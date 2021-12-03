@@ -718,19 +718,13 @@
  */
 #define FIL_RUNOUT_NC 0  // Default: 1
 
-<<<<<<< HEAD
-// Filament Runout Noise Threshold
-// Pause print when filament runout is detected at least for this time period.
-#define FIL_RUNOUT_NOISE_THRESHOLD 200   // Default: 100 (ms)
-=======
 /**
  * Filament Runout Noise Threshold
  * Pause print when filament runout is detected at least for this time period.
  *   Unit: [time in miliseconds]
  *   Value range: [min: 10, max: 1800]
  */
-#define FIL_RUNOUT_NOISE_THRESHOLD 100  // Default: 100
->>>>>>> master
+#define FIL_RUNOUT_NOISE_THRESHOLD 200  // Default: 100
 
 /**
  * Smart Filament Runout Detection
