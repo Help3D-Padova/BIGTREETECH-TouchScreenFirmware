@@ -19,8 +19,16 @@ void menuUnifiedMove(void)
       {ICON_MOVE,                    LABEL_MOVE},
       {ICON_DISABLE_STEPPERS,        LABEL_DISABLE_STEPPERS},
       {ICON_BABYSTEP,                LABEL_BABYSTEP},
+<<<<<<< HEAD
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
+=======
+      #if DELTA_PROBE_TYPE == 0  // if not Delta printer
+        {ICON_MANUAL_LEVEL,            LABEL_LEVELING},
+      #else
+        {ICON_DELTA_CALIBRATE,         LABEL_CALIBRATION},
+      #endif
+>>>>>>> master
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACK,                    LABEL_BACK},
     }

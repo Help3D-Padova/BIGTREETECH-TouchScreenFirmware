@@ -8,6 +8,36 @@ typedef enum
   MKEY_IDLE = IDLE_TOUCH,
 } MKEY_VALUES;
 
+<<<<<<< HEAD
+=======
+const GUI_RECT rect_of_mode[MODE_COUNT] = {
+  // 2 select icon
+  {1 * SPACE_SELEX + 0 * ICON_WIDTH, SPACE_SELEY, 1 * SPACE_SELEX + 1 * ICON_WIDTH, SPACE_SELEY + ICON_HEIGHT},
+  {3 * SPACE_SELEX + 1 * ICON_WIDTH, SPACE_SELEY, 3 * SPACE_SELEX + 2 * ICON_WIDTH, SPACE_SELEY + ICON_HEIGHT},
+};
+
+const uint8_t icon_mode [MODE_COUNT] = {
+  ICON_MARLIN_MODE,
+  ICON_TOUCH_MODE,
+};
+
+void drawModeIcon(void)
+{
+  for (uint8_t i = 0; i < MODE_COUNT; i++)
+  {
+    ICON_ReadDisplay(rect_of_mode[i].x0, rect_of_mode[i].y0, icon_mode[i]);
+  }
+
+  const GUI_RECT mode_title_rect[MODE_COUNT] = {
+    {0,           rect_of_mode[0].y1 + BYTE_HEIGHT / 2, text_startx, rect_of_mode[0].y1 + BYTE_HEIGHT / 2 + BYTE_HEIGHT},
+    {text_startx, rect_of_mode[0].y1 + BYTE_HEIGHT / 2, LCD_WIDTH,   rect_of_mode[0].y1 + BYTE_HEIGHT / 2 + BYTE_HEIGHT},
+  };
+
+  GUI_RestoreColorDefault();
+  GUI_DispStringInPrect(&mode_title_rect[0],(uint8_t *)"Marlin Mode");
+  GUI_DispStringInPrect(&mode_title_rect[1],(uint8_t *)"Touch Mode");
+}
+>>>>>>> master
 
 // open mode switching menu
 void menuMode(void)
