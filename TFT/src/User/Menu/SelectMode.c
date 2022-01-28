@@ -23,7 +23,7 @@ void menuMode(void)
      {ICON_OCTOPRINT,               LABEL_OCTOPRINT},
      {ICON_DISABLE_STEPPERS,        LABEL_DISABLE_STEPPERS},
      {ICON_CONNECTION_SETTINGS,     LABEL_CONNECTION_SETTINGS},
-     {ICON_BACKGROUND,              LABEL_BACKGROUND},
+     {ICON_NULL,                    LABEL_NULL},
      {ICON_BACK,                    LABEL_BACK},}
   };
 

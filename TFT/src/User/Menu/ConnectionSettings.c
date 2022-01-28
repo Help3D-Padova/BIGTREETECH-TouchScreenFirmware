@@ -140,9 +140,9 @@ void menuConnectionSettings(void)
       {ICON_DISCONNECT,              LABEL_DISCONNECT},
       {ICON_STOP,                    LABEL_EMERGENCYSTOP},
       {ICON_OCTOPRINT,               LABEL_OCTOPRINT},
-      {ICON_BACKGROUND,              LABEL_BACKGROUND},
-      {ICON_BACKGROUND,              LABEL_BACKGROUND},
-      {ICON_BACKGROUND,              LABEL_BACKGROUND},
+      {ICON_NULL,                    LABEL_NULL},
+      {ICON_NULL,                    LABEL_NULL},
+      {ICON_NULL,                    LABEL_NULL},
       {ICON_BACK,                    LABEL_BACK},
     }
   };
