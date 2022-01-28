@@ -1,7 +1,7 @@
 #ifndef _CONFIGURATION_H_
 #define _CONFIGURATION_H_
 
-#define CONFIG_VERSION 20211111
+#define CONFIG_VERSION 20211213
 
 //====================================================================================================
 //=============================== Settings Configurable On config.ini ================================
@@ -66,6 +66,18 @@
 #define EMULATED_M109_M190 1  // Default: 1
 
 /**
+ * Event LED
+ * When printing from TFT SD / TFT U Disk, the TFT periodically sets the printer's (neopixel) LED color
+ * and TFT's knob LED color, if any, according to the current nozzle and bed temperatures.
+ *
+ * NOTE: If "EMULATED_M109_M190" is disabled (heating controlled by printer), the TFT cannot control the
+ *       printer's (neopixel) LED during heating. It will control only the TFT's knob LED, if any.
+ *
+ *   Options: [disable: 0, enable: 1]
+ */
+#define EVENT_LED 1  // Default: 1
+
+/**
  * G-code File Comment Parsing
  * The TFT parses and processes extra information provided by the slicer as comments in the G-code file.
  * If enabled, the current implementation parses and processes print time and print layer information
@@ -127,14 +139,14 @@
 #define TITLE_BACKGROUND_COLOR  1  // Title background color (Default: 1)
 #define MENU_BACKGROUND_COLOR   1  // Menu background color (Default: 1)
 #define MENU_FONT_COLOR         0  // Menu font color (Default: 0)
-#define REMINDER_FONT_COLOR     2  // Reminder font color, such as: "No print attached", "Busy processing", etc (Default: 2)
-#define STATUS_FONT_COLOR       5  // Status (e.g. volume reminder, ABL probing point etc...) font color, such as: "Card inserted", "Card removed" (Default: 5)
-#define STATUS_XYZ_BG_COLOR    15  // Backgroud color for X Y Z position display in Status Screen menu (Default: 15)
+#define REMINDER_FONT_COLOR     2  // Reminder font color, such as: "No print attached", "Busy processing", etc. (Default: 2)
+#define STATUS_FONT_COLOR       5  // Status (e.g. volume reminder, ABL probing point etc.) font color, such as: "Card inserted", "Card removed" (Default: 5)
+#define STATUS_XYZ_BG_COLOR    15  // Background color for X Y Z position display in Status Screen menu (Default: 15)
 #define LIST_BORDER_COLOR      15  // List View border color (Default: 15)
 #define LIST_BUTTON_BG_COLOR   15  // List View button background color (Default: 15)
 
 // Mesh Leveling Display Colors (Mesh Editor)
-// Set the colors used for drawing the mesh with the minimun and maximum value in the grid.
+// Set the colors used for drawing the mesh with the minimum and maximum value in the grid.
 #define MESH_MIN_COLOR 7  // Default: 7
 #define MESH_MAX_COLOR 2  // Default: 2
 
@@ -180,8 +192,16 @@
 #define FILES_LIST_MODE 1  // Default: 1
 
 /**
+ * Filename Extension
+ * Display fullname for files listed in List Mode / Icon Mode menu.
+ * If disabled, any filename extension starting with ".g" or ".G" (e.g. ".g", ".gco", ".gcode" etc.) will be hidden.
+ *   Options: [disable: 0, enable: 1]
+ */
+#define FILENAME_EXTENSION 1  // Default: 1
+
+/**
  * Fan Speed In Percentage
- * Show fan speed in percentage. If disabled fan speeed will be displayed as PWM values.
+ * Show fan speed in percentage. If disabled fan speed will be displayed as PWM values.
  *   Options: [disable: 0, enable: 1]
  */
 #define FAN_SPEED_PERCENTAGE 1  // Default: 1
@@ -266,7 +286,7 @@
  * Set Marlin/Touch Mode as the default mode at startup.
  *
  * NOTE: Mode switching is possible only for Marlin Mode and Touch Mode by a long press of
- *       1.5 seconds on the display or holding down the encorder button for 1.5 seconds.
+ *       1.5 seconds on the display or holding down the encoder button for 1.5 seconds.
  *
  *   Options: [Marlin Mode: 0, Touch Mode: 1, Blocked Marlin Mode: 2, Blocked Touch Mode: 3]
  */
@@ -314,7 +334,7 @@
 /**
  * Marlin Mode Title
  * Banner text displayed at the top of the TFT in Marlin Mode.
- *   Value range: [min: 3, max: 20 characthers]
+ *   Value range: [min: 3, max: 20 characters]
  */
 #define MARLIN_TITLE "Marlin Mode"  // Default: "Marlin Mode"
 
@@ -574,7 +594,7 @@
  * Used by Manual Leveling, Move and Probe Offset menus in order axis matches the actual axis movement.
  *
  * NOTE: The Y axis of different printer (move hotbed or move nozzle) move in different directions.
- *       So Y axis leveling invertion can't follow up inverted_axis[Y_AXIS].
+ *       So Y axis leveling inversion can't follow up inverted_axis[Y_AXIS].
  *       We separate a single variable "LY" (Leveling Y axis) to deal with the Y axis leveling movement direction.
  *
  *   Format: [X<option> Y<option> Z<option> LY<option>]
@@ -590,14 +610,14 @@
  * Used by the Probe Offset menu for the Z offset tuning process.
  * If enabled, after homing a probing in the center of the bed is performed and then the nozzle
  * is moved to the XY probing point.
- * If disabled, after homing the nozzle is moved directly to the XY honing point. This is usefull
+ * If disabled, after homing the nozzle is moved directly to the XY honing point. This is useful
  * in case Marlin firmware is configured to use the probe for Z axis homing (e.g.
  * USE_PROBE_FOR_Z_HOMING enabled in Marlin firmware) to avoid a second probing after homing.
  *
  * NOTES:
  *   - Enable it in case Marlin firmware is not configured to use the probe for Z axis homing
  *     (e.g. USE_PROBE_FOR_Z_HOMING disabled in Marlin firmware) or the XY probing point set
- *     for homing is not reacheable by the nozzle (e.g. due to HW limitations/constraints or
+ *     for homing is not reachable by the nozzle (e.g. due to HW limitations/constraints or
  *     printer specific configuration).
  *   - Disable it (preferably) in case Marlin firmware is configured to use the probe for Z axis
  *     homing (e.g. USE_PROBE_FOR_Z_HOMING enabled in Marlin firmware).
@@ -721,14 +741,14 @@
 /**
  * Filament Runout Noise Threshold
  * Pause print when filament runout is detected at least for this time period.
- *   Unit: [time in miliseconds]
+ *   Unit: [time in milliseconds]
  *   Value range: [min: 10, max: 1800]
  */
 #define FIL_RUNOUT_NOISE_THRESHOLD 200  // Default: 100
 
 /**
  * Smart Filament Runout Detection
- * Used in conjuction with an SFS (Smart Filamanent Sensor) based on an encoder disc that
+ * Used in conjunction with an SFS (Smart Filament Sensor) based on an encoder disc that
  * toggles runout pin as filament moves.
  *   Unit: [distance in mm]
  *   Value range: [min: 1, max: 50]
@@ -850,7 +870,7 @@
 
 /**
  * Knob LED Pixels (only for TFT28/TFT35_E3/TFT43/TFT50/TFT70 V3.0)
- * Set the number of LEDs in the strip connected the "Neopixel" port of TFT.
+ * Set the number of LEDs in the strip connected to "Neopixel" port of TFT.
  * It shares the same signal line as "knob_led". 0 means the default number in TFT hardware.
  * Greater than 0 means the number of LEDs in the strip.
  *   Value range: [min: 0, max: 200]
@@ -867,8 +887,8 @@
  * Up to 15 custom G-code commands that will be available in the Custom menu.
  *
  * Usage:
- *   - To enable a custom command, remove "//" at the begining of custom commands label & G-code.
- *   - To disable a custom command, add "//" at the begining of custom commands label & G-code.
+ *   - To enable a custom command, remove "//" at the beginning of custom commands label & G-code.
+ *   - To disable a custom command, add "//" at the beginning of custom commands label & G-code.
  *
  * NOTE: If the values are left blank then default name and G-code will be used.
  *
@@ -1128,7 +1148,8 @@
  *
  *   Options: [ENGLISH,    CHINESE,  RUSSIAN,     JAPANESE,   ARMENIAN,  GERMAN,        CZECH,
  *             SPANISH,    FRENCH,   PORTUGUESE,  ITALIAN,    POLISH,    SLOVAK,        DUTCH,
- *             HUNGARIAN,  TURKISH,  GREEK,       SLOVENIAN,  CATALAN,   TRAD_CHINESE,  UKRAINIAN]
+ *             HUNGARIAN,  TURKISH,  GREEK,       SLOVENIAN,  CATALAN,   TRAD_CHINESE,  UKRAINIAN,
+ *             BRAZIL]
  */
 #define SYSTEM_LANGUAGE ENGLISH  // Default: ENGLISH
 
@@ -1248,7 +1269,7 @@
 #define KEYBOARD_COLOR_LAYOUT 0  // Default: 0
 
 /**
- * QWERTY/QWERTZ Keyboard Layout
+ * QWERTY/QWERTZ Keyboard Layout (Terminal menu)
  * Keyboard layout for Terminal Keyboard (Only for TFT70 V3.0).
  *   Options: [qwerty: 0, qwertz: 1, azerty: 2]
  *     qwerty: The typically keyboard Layout for english.
@@ -1258,11 +1279,27 @@
 #define TERMINAL_KEYBOARD_LAYOUT 0  // Default: 0
 
 /**
+ * Progress Bar Color (Printing menu)
+ * The color of the progress bar during print.
+ *   Options: [Orange: 0, Yellow: 1, Red: 2, Green: 3, Blue: 4, Cyan: 5, Magenta: 6, Purple: 7, Lime: 8, Gray: 9]
+ */
+#define PROGRESS_BAR_COLOR 0  // Default: 0
+
+/**
  * Progress Bar Layout (Printing menu)
  * Uncomment to enable a progress bar with 10% markers.
  * Comment to enable a standard progress bar.
  */
 //#define MARKED_PROGRESS_BAR  // Default: commented (disabled)
+
+/**
+ * Live Text Common Color Layout (Status Screen menu)
+ * Some topics require to use a common color for live text in Status Screen menu.
+ * Uncomment to use the color of live text 1 (name) also for live text 2 (value)
+ * (e.g. for THEME_Rep Rap Firmware Dark theme).
+ * Comment to use standard colors.
+ */
+//#define LIVE_TEXT_COMMON_COLOR  // Default: commented (disabled)
 
 /**
  * Live Text Background Color Rendering Technique (Printing menu and Status Screen menu)
@@ -1322,7 +1359,7 @@
  *                    flexible but requires a dedicated post-processing of gcode files for
  *                    most slicers. "Classic" is used as fallback.
  *     Base64 PNG:    A specific thumbnail comment identifies the location of a Base64-encoded
- *                    PNG thumbnail. It is slower as classic but most flexible. It does _not_
+ *                    PNG thumbnail. It is slower as classic but most flexible. It does not
  *                    require dedicated post-processing of gcode files for most slicers.
  *                    "RGB565 bitmap" and "Classic" are used as fallback.
  */

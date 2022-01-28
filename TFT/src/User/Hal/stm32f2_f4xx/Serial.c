@@ -148,16 +148,16 @@ void USART6_IRQHandler(void)
   USART_IRQHandler(_USART6);
 }
 
-void Serial_Puts(uint8_t port, char *s)
+void Serial_Puts(uint8_t port, const char *s)
 {
   while (*s)
   {
     while ((Serial[port].uart->SR & USART_FLAG_TC) == (uint16_t)RESET);
-    Serial[port].uart->DR = ((u16)*s++ & (uint16_t)0x01FF);
+    Serial[port].uart->DR = ((uint16_t)*s++ & (uint16_t)0x01FF);
   }
 }
 
-void Serial_Putchar(uint8_t port, char ch)
+void Serial_Putchar(uint8_t port, const char ch)
 {
   while ((Serial[port].uart->SR & USART_FLAG_TC) == (uint16_t)RESET);
   Serial[port].uart->DR = (uint8_t) ch;

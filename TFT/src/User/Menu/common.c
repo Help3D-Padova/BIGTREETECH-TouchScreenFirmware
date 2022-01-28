@@ -270,7 +270,7 @@ static void redrawMenu(MENU_TYPE menuType)
 { // used only when exiting from numpad
   if (menuType == MENU_TYPE_ICON)
     menuDrawPage(getCurMenuItems());
-  else if(menuType == MENU_TYPE_LISTVIEW)
+  else if (menuType == MENU_TYPE_LISTVIEW)
     listViewRefreshMenu();
 }
 
@@ -342,7 +342,7 @@ NOZZLE_STATUS warmupNozzle(uint8_t toolIndex, void (* callback)(void))
       strcat(tempMsg, "\n");
       strcat(tempMsg, tempStr);
 
-      setDialogText(LABEL_WARNING, (uint8_t *)tempMsg, LABEL_CONFIRM, LABEL_BACKGROUND);
+      setDialogText(LABEL_WARNING, (uint8_t *)tempMsg, LABEL_CONFIRM, LABEL_NULL);
       showDialog(DIALOG_TYPE_ERROR, NULL, NULL, NULL);
       return COLD;
     }

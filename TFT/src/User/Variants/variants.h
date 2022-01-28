@@ -36,6 +36,10 @@
   #include "pin_TFT35_V2_0.h"
 #elif defined(TFT35_V3_0)
   #include "pin_TFT35_V3_0.h"
+#elif defined(GD_TFT35_V3_0)
+  #include "pin_GD_TFT35_V3_0.h"
+#elif defined(GD_TFT35_E3_V3_0)
+  #include "pin_GD_TFT35_E3_V3_0.h"
 #elif defined(TFT43_V3_0)
   #include "pin_TFT43_V3_0.h"
 #elif defined(TFT50_V3_0)
@@ -68,7 +72,7 @@
 #define _FONT_H(size) (size >> 8)
 #define _FONT_W(size) (size & 0xFF)
 
-#define FONT_SIZE_NORMAL _FONT_SIZE(BYTE_HEIGHT, BYTE_WIDTH)  // Normal font for common menu
+#define FONT_SIZE_NORMAL _FONT_SIZE(BYTE_HEIGHT, BYTE_WIDTH)              // Normal font for common menu etc...
 #define FONT_SIZE_LARGE  _FONT_SIZE(LARGE_BYTE_HEIGHT, LARGE_BYTE_WIDTH)  // Large font for numpad menu etc...
 
 #endif

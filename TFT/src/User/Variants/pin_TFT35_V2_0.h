@@ -1,13 +1,19 @@
-#ifndef _PIN_TFT35_V2_0_H_ // modify to actual filename !!!
-#define _PIN_TFT35_V2_0_H_ // modify to actual filename !!!
+#ifndef _PIN_TFT35_V2_0_H_  // modify to actual filename !!!
+#define _PIN_TFT35_V2_0_H_  // modify to actual filename !!!
 
 // MCU type (STM32F10x, STM32F2xx)
 #include "stm32f10x.h"
 
+//#undef PORTRAIT_MODE  // comment this line in case the TFT variant supports Portrait Mode
+
 // LCD resolution, font and icon size
 #ifndef TFT_RESOLUTION
   #define TFT_RESOLUTION
-  #include "./Resolution/TFT_480X320.h"
+  #ifdef PORTRAIT_MODE
+    #include "./Resolution/TFT_320X480.h"
+  #else
+    #include "./Resolution/TFT_480X320.h"
+  #endif
 #endif
 
 #ifndef ROOT_DIR
@@ -40,7 +46,9 @@
 #endif
 
 // Debug disable, free pins for other function
-#define DISABLE_JTAG   // free JTAG(PB3/PB4) for SPI3
+// free JTAG(PB3/PB4) for SPI3
+#define DISABLE_JTAG() RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE); \
+                       GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE)
 //#define DISABLE_DEBUG  // free all pins
 
 // LCD Backlight pin (PWM can adjust brightness)
@@ -101,7 +109,7 @@
 //#define LCD_BTN_PIN  PB2
 
 // U disk support
-//#define U_DISK_SUPPORT
+//#define USB_FLASH_DRIVE_SUPPORT
 //#define USE_USB_OTG_FS
 
 // Extend function(PS_ON, filament_detect)

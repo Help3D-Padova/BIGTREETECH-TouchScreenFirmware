@@ -11,12 +11,17 @@ const MENUITEMS settingsItems = {
     {ICON_FEATURE_SETTINGS,        LABEL_FEATURE_SETTINGS},
     {ICON_SCREEN_INFO,             LABEL_SCREEN_INFO},
     {ICON_CONNECTION_SETTINGS,     LABEL_CONNECTION_SETTINGS},
+<<<<<<< HEAD
     #ifdef QUICK_EEPROM_BUTTON
         {ICON_EEPROM_SAVE,             LABEL_EEPROM_SETTINGS},
       #else
         {ICON_BACKGROUND,              LABEL_BACKGROUND},
       #endif
     {ICON_OCTOPRINT,               LABEL_OCTOPRINT},
+=======
+    {ICON_NULL,                    LABEL_NULL},
+    {ICON_NULL,                    LABEL_NULL},
+>>>>>>> origin/master
     {ICON_BACK,                    LABEL_BACK},
   }
 };
@@ -116,7 +121,7 @@ void menuInfo(void)
 
   // spi flash info
   float usedMB = (float)FLASH_USED/1048576;
-  sprintf(buf, "Used %.2f%% (%.2fMB/%uMB)", flashUsedPercentage(), usedMB, (W25Qxx_ReadCapacity()/1048576));
+  sprintf(buf, "Used %.2f%% (%.2fMB/%uMB)", flashUsedPercentage(), usedMB, (W25Qxx_ReadCapacity() / 1048576));
 
   const uint16_t top_y = (LCD_HEIGHT - (7 * BYTE_HEIGHT)) / 2;  // 8 firmware info lines + 1 SPI flash info line
   const uint16_t start_x = strlen("Firmware:") * BYTE_WIDTH;

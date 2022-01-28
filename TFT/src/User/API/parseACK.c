@@ -374,20 +374,19 @@ void hostActionCommands(void)
     switch (hostAction.button)
     {
       case 0:
-        setDialogText((uint8_t *)"Message", (uint8_t *)hostAction.prompt_begin, LABEL_CONFIRM,
-                      LABEL_BACKGROUND);
+        setDialogText((uint8_t *)"Message", (uint8_t *)hostAction.prompt_begin, LABEL_CONFIRM, LABEL_NULL);
         showDialog(DIALOG_TYPE_ALERT, setRunoutAlarmFalse, NULL, NULL);
         break;
 
       case 1:
-        setDialogText((uint8_t *)"Action command", (uint8_t *)hostAction.prompt_begin, (uint8_t *)hostAction.prompt_button[0],
-                      LABEL_BACKGROUND);
+        setDialogText((uint8_t *)"Action command", (uint8_t *)hostAction.prompt_begin,
+                      (uint8_t *)hostAction.prompt_button[0], LABEL_NULL);
         showDialog(DIALOG_TYPE_ALERT, breakAndContinue, NULL, NULL);
         break;
 
       case 2:
-        setDialogText((uint8_t *)"Action command", (uint8_t *)hostAction.prompt_begin, (uint8_t *)hostAction.prompt_button[0],
-                      (uint8_t *)hostAction.prompt_button[1]);
+        setDialogText((uint8_t *)"Action command", (uint8_t *)hostAction.prompt_begin,
+                      (uint8_t *)hostAction.prompt_button[0], (uint8_t *)hostAction.prompt_button[1]);
         showDialog(DIALOG_TYPE_ALERT, resumeAndPurge, resumeAndContinue, NULL);
         break;
     }
@@ -631,7 +630,7 @@ void parseACK(void)
       // parse pause message
       else if (!infoMachineSettings.promptSupport && ack_seen("paused for user"))
       {
-        setDialogText((uint8_t *)"Printer is Paused", (uint8_t *)"Paused for user\ncontinue?", LABEL_CONFIRM, LABEL_BACKGROUND);
+        setDialogText((uint8_t *)"Printer is Paused", (uint8_t *)"Paused for user\ncontinue?", LABEL_CONFIRM, LABEL_NULL);
         showDialog(DIALOG_TYPE_QUESTION, breakAndContinue, NULL, NULL);
       }
       // parse host action commands. Required "HOST_ACTION_COMMANDS" and other settings in Marlin
@@ -735,7 +734,7 @@ void parseACK(void)
         {
           sprintf (&tmpMsg[strlen(tmpMsg)], "\nRange: %0.5f", ack_value());
         }
-        setDialogText((uint8_t *)"Repeatability Test", (uint8_t *)tmpMsg, LABEL_CONFIRM, LABEL_BACKGROUND);
+        setDialogText((uint8_t *)"Repeatability Test", (uint8_t *)tmpMsg, LABEL_CONFIRM, LABEL_NULL);
         showDialog(DIALOG_TYPE_INFO, NULL, NULL, NULL);
       }
       // parse M48, Standard Deviation
@@ -748,7 +747,7 @@ void parseACK(void)
         {
           levelingSetProbedPoint(-1, -1, ack_value());  // save probed Z value
           sprintf(tmpMsg, "%s\nStandard Deviation: %0.5f", (char *)getDialogMsgStr(), ack_value());
-          setDialogText((uint8_t *)"Repeatability Test", (uint8_t *)tmpMsg, LABEL_CONFIRM, LABEL_BACKGROUND);
+          setDialogText((uint8_t *)"Repeatability Test", (uint8_t *)tmpMsg, LABEL_CONFIRM, LABEL_NULL);
           showDialog(DIALOG_TYPE_INFO, NULL, NULL, NULL);
         }
       }
@@ -1244,13 +1243,18 @@ void parseACK(void)
       ack_port_index = PORT_1;  // reset ACK port index to avoid wrong relaying (in case no more commands will
                                 // be sent by interfaceCmd) of any successive spontaneous ACK message
     }
-    #ifdef SERIAL_PORT_2
+    #if defined(SERIAL_PORT_2) || defined(SERIAL_PORT_3) || defined(SERIAL_PORT_4)
       else if (!ack_seen("ok") || ack_seen("T:") || ack_seen("T0:"))  // if a spontaneous ACK message
       {
         // pass on the spontaneous ACK message to all the supplementary serial ports (since these messages come unrequested)
         for (SERIAL_PORT_INDEX i = PORT_2; i < SERIAL_PORT_COUNT; i++)
         {
-          if (infoSettings.serial_port[i] > 0)  // if serial port is enabled
+          // forward data only if serial port is enabled
+          if (infoSettings.serial_port[i] > 0
+              #ifdef SERIAL_DEBUG_PORT
+                && serialPort[i].port != SERIAL_DEBUG_PORT  // do not forward data to serial debug port
+              #endif
+              )
           {
             Serial_Puts(serialPort[i].port, dmaL2Cache);  // pass on the ACK message to the port
           }
@@ -1265,13 +1269,18 @@ void parseACK(void)
   }
 }
 
-#ifdef SERIAL_PORT_2
+#if defined(SERIAL_PORT_2) || defined(SERIAL_PORT_3) || defined(SERIAL_PORT_4)
 
 void parseRcvGcode(void)
 {
   for (SERIAL_PORT_INDEX i = PORT_2; i < SERIAL_PORT_COUNT; i++)  // scan all the supplementary serial ports
   {
-    if (infoSettings.serial_port[i] > 0)  // if serial port is enabled
+    // forward data only if serial port is enabled
+    if (infoSettings.serial_port[i] > 0
+        #ifdef SERIAL_DEBUG_PORT
+          && serialPort[i].port != SERIAL_DEBUG_PORT  // do not forward data to serial debug port
+        #endif
+        )
     {
       while (syncL2CacheFromL1(serialPort[i].port))  // if some data are retrieved from L1 to L2 cache
       {

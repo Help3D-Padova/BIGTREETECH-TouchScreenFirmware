@@ -5,23 +5,23 @@ MYFILE infoFile = {"?:", {0}, {0}, 0, 0, 0, 0, TFT_SD, {0}};
 
 void setPrintModelIcon(bool exist)
 {
-  infoFile.model_icon = exist;
+  infoFile.modelIcon = exist;
 }
 
 bool isPrintModelIcon(void)
 {
-  return infoFile.model_icon;
+  return infoFile.modelIcon;
 }
 
 bool mountFS(void)
 {
-  //  resetInfoFile();  // needn't this
+  //resetInfoFile();  // needn't this
   switch (infoFile.source)
   {
     case TFT_SD:
       return mountSDCard();
 
-    case TFT_UDISK:
+    case TFT_USB_DISK:
       return mountUDisk();
 
     case BOARD_SD:
@@ -48,21 +48,23 @@ void clearInfoFile(void)
   {
     free(infoFile.file[i]);
     infoFile.file[i] = 0;
-    free(infoFile.Longfile[i]);
-    infoFile.Longfile[i] = 0;
+
+    if (infoFile.longFile[i] != 0)  // long filename is optional so we need to check its presence
+      free(infoFile.longFile[i]);
+    infoFile.longFile[i] = 0;
   }
   infoFile.folderCount = 0;
   infoFile.fileCount = 0;
 }
 
-TCHAR *getCurFileSource(void)
+TCHAR * getCurFileSource(void)
 {
   switch (infoFile.source)
   {
     case TFT_SD:
       return "SD:";
 
-    case TFT_UDISK:
+    case TFT_USB_DISK:
       return "U:";
 
     case BOARD_SD:
@@ -92,7 +94,7 @@ bool scanPrintFiles(void)
   switch (infoFile.source)
   {
     case TFT_SD:
-    case TFT_UDISK:
+    case TFT_USB_DISK:
       return scanPrintFilesFatFs();
 
     case BOARD_SD:
@@ -104,7 +106,7 @@ bool scanPrintFiles(void)
 }
 
 // check and open folder
-bool EnterDir(char *nextdir)
+bool EnterDir(char * nextdir)
 {
   if (strlen(infoFile.title) + strlen(nextdir) + 2 >= MAX_PATH_LEN)
     return 0;
@@ -129,13 +131,82 @@ bool IsRootDir(void)
   return !strchr(infoFile.title, '/');
 }
 
+// check if filename provides a supported filename extension
+char * isSupportedFile(char * filename)
+{
+  char * extPos = strstr(filename, ".g");  // support "*.g","*.gco" and "*.gcode"
+
+  if (extPos == NULL)
+    extPos = strstr(filename, ".G");  // support "*.g","*.gco" and "*.gcode"
+
+  return extPos;
+}
+
+char * hideFileExtension(uint8_t index)
+{
+  char * filename = infoFile.file[index];
+  char * extPos;
+
+  if (infoSettings.filename_extension == 0)  // if filename extension is disabled
+  {
+    extPos = isSupportedFile(filename);
+
+    // if filename provides a supported filename extension then
+    // check extra byte for filename extension check. If 0, no filename extension was previously hidden
+    if (extPos != NULL && filename[strlen(filename) + 1] == 0)
+      filename[extPos - filename] = 0;  // temporary hide filename extension
+  }
+
+  if (infoMachineSettings.longFilename == ENABLED && infoFile.source == BOARD_SD)
+  {
+    filename = infoFile.longFile[index];
+
+    if (infoSettings.filename_extension == 0)  // if filename extension is disabled
+    {
+      extPos = isSupportedFile(filename);
+
+      // if filename provides a supported filename extension then
+      // check extra byte for filename extension check. If 0, no filename extension was previously hidden
+      if (extPos != NULL && filename[strlen(filename) + 1] == 0)
+        filename[extPos - filename] = 0;  // temporary hide filename extension
+    }
+  }
+
+  return filename;
+}
+
+char * restoreFileExtension(uint8_t index)
+{
+  char * filename = infoFile.file[index];
+
+  if (infoSettings.filename_extension == 0)  // if filename extension is disabled
+  {
+    if (filename[strlen(filename) + 1] != 0)  // check extra byte for filename extension check. If 0, no filename extension was previously hidden
+      filename[strlen(filename)] = '.';       // restore filename extension
+  }
+
+  if (infoMachineSettings.longFilename == ENABLED && infoFile.source == BOARD_SD)
+  {
+    filename = infoFile.longFile[index];
+
+    if (infoSettings.filename_extension == 0)  // if filename extension is disabled
+    {
+      if (filename[strlen(filename) + 1] != 0)  // check extra byte for filename extension check. If 0, no filename extension was previously hidden
+        filename[strlen(filename)] = '.';       // restore filename extension
+    }
+  }
+
+  return filename;
+}
+
 // Volume exist detect
 static bool volumeSrcStatus[FF_VOLUMES] = {false, false};
 
-bool isVolumeExist(uint8_t src)
+bool volumeExists(uint8_t src)
 {
   if (src >= FF_VOLUMES)
     return true;
+
   return volumeSrcStatus[src];
 }
 
@@ -148,7 +219,7 @@ void loopVolumeSource(void)
     if (volumeSrcStatus[i] != (*volumeInserted[i])())
     {
       const int16_t labelSDStates[FF_VOLUMES][2] = {{LABEL_TFTSD_REMOVED, LABEL_TFTSD_INSERTED},
-                                                    {LABEL_U_DISK_REMOVED, LABEL_U_DISK_INSERTED}};
+                                                    {LABEL_USB_DISK_REMOVED, LABEL_USB_DISK_INSERTED}};
       volumeSrcStatus[i] = (*volumeInserted[i])();
       volumeReminderMessage(labelSDStates[i][volumeSrcStatus[i]], STATUS_NORMAL);
     }

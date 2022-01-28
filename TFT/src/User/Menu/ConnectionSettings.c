@@ -139,10 +139,17 @@ void menuConnectionSettings(void)
       {ICON_BAUD_RATE,               LABEL_SERIAL_PORTS},
       {ICON_DISCONNECT,              LABEL_DISCONNECT},
       {ICON_STOP,                    LABEL_EMERGENCYSTOP},
+<<<<<<< HEAD
       {ICON_OCTOPRINT,               LABEL_OCTOPRINT},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
+=======
+      {ICON_SHUT_DOWN,               LABEL_SHUT_DOWN},
+      {ICON_BAUD_RATE,               LABEL_ON},
+      {ICON_NULL,                    LABEL_NULL},
+      {ICON_NULL,                    LABEL_NULL},
+>>>>>>> origin/master
       {ICON_BACK,                    LABEL_BACK},
     }
   };

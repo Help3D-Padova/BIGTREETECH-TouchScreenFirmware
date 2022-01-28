@@ -1,13 +1,19 @@
-#ifndef _PIN_MKS_TFT32_V1_4_H_ // modify to actual filename !!!
-#define _PIN_MKS_TFT32_V1_4_H_ // modify to actual filename !!!
+#ifndef _PIN_MKS_TFT32_V1_4_H_  // modify to actual filename !!!
+#define _PIN_MKS_TFT32_V1_4_H_  // modify to actual filename !!!
 
 // MCU type (STM32F10x, STM32F2xx)
 #include "stm32f10x.h"
 
+//#undef PORTRAIT_MODE  // comment this line in case the TFT variant supports Portrait Mode
+
 // LCD resolution, font and icon size
 #ifndef TFT_RESOLUTION
   #define TFT_RESOLUTION
-  #include "./Resolution/TFT_320X240.h"
+  #ifdef PORTRAIT_MODE
+    #include "./Resolution/TFT_240X320.h"
+  #else
+    #include "./Resolution/TFT_320X240.h"
+  #endif
 #endif
 
 #ifndef ROOT_DIR
@@ -198,7 +204,9 @@
 
 // Marlin mode + LCD Encoder support
 #ifdef ST7920_EMULATOR
-  #define DISABLE_DEBUG         // free JTAG(PB3/PB4) for SPI3 and free SWDIO PA13 PA14 for encoder pins
+  // free JTAG(PB3/PB4) for SPI3 and free SWDIO PA13 PA14 for encoder pins
+  #define DISABLE_DEBUG() RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE); \
+                          GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE)
   #define LCD_ENCA_PIN  PA13    // map ENCA pin to JTAG DIO pin
   #define LCD_ENCB_PIN  PA14    // map ENCB pin to JTAG CLK pin
 
@@ -213,7 +221,7 @@
 #endif
 
 // U disk support
-#define U_DISK_SUPPORT
+#define USB_FLASH_DRIVE_SUPPORT
 #define USE_USB_OTG_FS
 
 // Extend function(PS_ON, filament_detect)
