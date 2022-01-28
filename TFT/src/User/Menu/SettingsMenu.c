@@ -11,17 +11,12 @@ const MENUITEMS settingsItems = {
     {ICON_FEATURE_SETTINGS,        LABEL_FEATURE_SETTINGS},
     {ICON_SCREEN_INFO,             LABEL_SCREEN_INFO},
     {ICON_CONNECTION_SETTINGS,     LABEL_CONNECTION_SETTINGS},
-<<<<<<< HEAD
     #ifdef QUICK_EEPROM_BUTTON
         {ICON_EEPROM_SAVE,             LABEL_EEPROM_SETTINGS},
       #else
         {ICON_BACKGROUND,              LABEL_BACKGROUND},
       #endif
     {ICON_OCTOPRINT,               LABEL_OCTOPRINT},
-=======
-    {ICON_NULL,                    LABEL_NULL},
-    {ICON_NULL,                    LABEL_NULL},
->>>>>>> origin/master
     {ICON_BACK,                    LABEL_BACK},
   }
 };

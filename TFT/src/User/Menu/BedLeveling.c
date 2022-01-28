@@ -45,13 +45,8 @@ void menuBedLeveling(void)
         {ICON_CALIBRATION,             LABEL_CALIBRATION},
       #endif
       {ICON_Z_FADE,                  LABEL_ABL_Z},
-<<<<<<< HEAD
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_LEVELING_OFF,            LABEL_BL_DISABLE},
-=======
-      {ICON_NULL,                    LABEL_NULL},
-      {ICON_HEAT_FAN,                LABEL_UNIFIEDHEAT},
->>>>>>> origin/master
       {ICON_BACK,                    LABEL_BACK},
     }
   };
